@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrasi Pendukung - IPMS PLN UP3 Palu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f7;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #0b2a4a;
+            color: #e0e9f5;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: #2a5a7a; border-radius: 10px; }
+
+        .sidebar-brand {
+            padding: 0 20px 18px 20px;
+            border-bottom: 1px solid #1a3d5e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-brand img { height: 40px; width: auto; }
+        .sidebar-brand h2 { font-size: 16px; font-weight: 600; color: white; letter-spacing: 0.3px; }
+        .sidebar-brand h2 span { font-weight: 300; color: #8ab3d6; }
+
+        .menu-section {
+            padding: 16px 20px 6px 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #6e92b5;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            padding: 10px 20px 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13.5px;
+            color: #b6cde0;
+            cursor: pointer;
+            transition: 0.15s;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+
+        .menu-item:hover { background: #143a5a; color: white; }
+        .menu-item.active { background: #143a5a; color: white; border-left-color: #4a9eff; }
+        .menu-item i { width: 20px; font-size: 15px; color: #6a92b8; }
+        .menu-item.active i { color: #7cb8ff; }
+
+        .sub-menu { padding-left: 20px; }
+        .sub-menu .menu-item { font-size: 12.5px; padding: 6px 20px 6px 20px; border-left: 3px solid transparent; }
+        .sub-menu .menu-item i { font-size: 11px; width: 18px; }
+        .sub-menu .menu-item.active-sub { background: #143a5a; color: white; border-left-color: #4a9eff; }
+        .sub-menu .menu-item.active-sub i { color: #7cb8ff; }
+
+        .menu-divider { height: 1px; background: #1a3d5e; margin: 8px 20px; }
+
+        .main-content {
+            flex: 1;
+            padding: 24px 32px 40px 32px;
+            background: #f0f2f7;
+            overflow-x: auto;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0b2a4a;
+        }
+
+        .page-title h1 i {
+            color: #4a7aa0;
+            margin-right: 8px;
+        }
+
+        .page-title p {
+            color: #5a7290;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 4px 16px 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dcee;
+        }
+
+        .user-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #0b2a4a;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-profile .user-name { font-size: 13px; font-weight: 500; color: #0b2a4a; }
+        .user-profile .user-name small { font-weight: 400; color: #6a85a5; font-size: 11px; display: block; margin-top: -2px; }
+
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            color: #4a6a8a;
+            cursor: pointer;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d0dcee;
+            transition: 0.2s;
+        }
+
+        .notification-icon:hover { background: #f0f5fe; border-color: #4a9eff; }
+        .notification-icon .badge-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #5a7290;
+            margin: 12px 0 18px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e6edf6;
+        }
+
+        .breadcrumb i { margin-right: 6px; color: #7e94b0; }
+        .breadcrumb span { color: #0b2a4a; font-weight: 500; }
+        .breadcrumb .separator { margin: 0 6px; color: #b0c4db; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e6edf6;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .stat-card .stat-number { font-size: 28px; font-weight: 700; color: #0b2a4a; line-height: 1.2; }
+        .stat-card .stat-label { font-size: 13px; color: #6a85a5; margin-top: 2px; }
+        .stat-card .stat-icon { font-size: 24px; color: #4a7aa0; margin-bottom: 4px; }
+
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid #e6edf6;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            align-items: center;
+        }
+
+        .filter-section .filter-group { display: flex; align-items: center; gap: 8px; }
+        .filter-section .filter-group label { font-size: 12px; color: #5a7290; font-weight: 500; }
+        .filter-section .filter-group select,
+        .filter-section .filter-group input {
+            padding: 6px 12px;
+            border: 1px solid #d0dcee;
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+            background: #fafcff;
+        }
+        .filter-section .filter-group select:focus,
+        .filter-section .filter-group input:focus { border-color: #4a9eff; }
+
+        .btn-primary {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover { background: #1a3d5e; transform: translateY(-1px); }
+
+        .table-container {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #e6edf6;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .table-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e6edf6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: linear-gradient(135deg, #f5f8fd 0%, #e8f0fe 100%);
+        }
+
+        .table-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+
+        .table-header h3 i {
+            color: #4a7aa0;
+            margin-right: 8px;
+        }
+
+        .table-header .table-actions { display: flex; gap: 10px; align-items: center; }
+        .table-header .table-actions input {
+            padding: 6px 14px;
+            border: 1px solid #d0dcee;
+            border-radius: 20px;
+            font-size: 12px;
+            outline: none;
+            background: #f8faff;
+        }
+        .table-header .table-actions input:focus { border-color: #4a9eff; }
+
+        .table-wrap { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #0b2a4a;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: white;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: none;
+            white-space: nowrap;
+        }
+
+        th i {
+            margin-right: 6px;
+            color: #7cb8ff;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef3f9;
+            color: #1a3452;
+            vertical-align: middle;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: #fafcff;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #ffffff;
+        }
+
+        tbody tr:hover td {
+            background: #e8f0fe;
+            cursor: pointer;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+
+        .item-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-cell .item-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+            background: #4a7aa0;
+        }
+
+        .item-cell .item-name-detail { display: flex; flex-direction: column; }
+        .item-cell .item-name-detail .name { font-weight: 600; color: #0b2a4a; }
+        .item-cell .item-name-detail .sub { font-size: 11px; color: #6a85a5; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-badge.connected { background: #e6f7ed; color: #0f7b3e; }
+        .status-badge.disconnected { background: #fde8e8; color: #8a2a2a; }
+        .status-badge.progress { background: #fef6e6; color: #8a6a1a; }
+
+        .action-link {
+            color: #4a7aa0;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px 8px;
+            transition: 0.2s;
+            border-radius: 6px;
+            background: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .action-link:hover {
+            color: #0b2a4a;
+            background: #e8f0fe;
+        }
+
+        .action-link.danger {
+            color: #b33a3a;
+        }
+
+        .action-link.danger:hover {
+            color: #c94444;
+            background: #fde8e8;
+        }
+
+        .action-group-table {
+            display: flex;
+            gap: 4px;
+        }
+
+        .table-footer {
+            padding: 12px 20px;
+            border-top: 1px solid #e6edf6;
+            font-size: 12px;
+            color: #5a7290;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #fafcff;
+        }
+
+        .table-footer .pagination { display: flex; gap: 4px; }
+        .table-footer .pagination span {
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .table-footer .pagination span.active {
+            background: #0b2a4a;
+            color: white;
+        }
+        .table-footer .pagination span:hover:not(.active) {
+            background: #eef3f9;
+        }
+
+        .badge-count {
+            background: #eef3f9;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #1a3452;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .filter-section { flex-direction: column; align-items: stretch; }
+            .filter-section .filter-group { flex-wrap: wrap; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 12px 0;
+            }
+            .sidebar-brand h2,
+            .menu-item span,
+            .menu-section,
+            .menu-item .badge,
+            .sub-menu {
+                display: none;
+            }
+            .sidebar-brand {
+                padding: 0 12px 12px 12px;
+                justify-content: center;
+            }
+            .sidebar-brand img { height: 30px; }
+            .menu-item {
+                padding: 12px 18px;
+                justify-content: center;
+            }
+            .menu-item i { font-size: 18px; width: auto; }
+            .main-content { padding: 16px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .top-right .user-profile .user-name small { display: none; }
+            .top-header { flex-direction: column; align-items: flex-start; }
+            .top-right { width: 100%; justify-content: flex-end; }
+            .table-header { flex-direction: column; align-items: stretch; }
+            .table-header .table-actions { flex-wrap: wrap; }
+            .item-cell .item-name-detail .sub { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .item-cell .item-avatar { width: 28px; height: 28px; font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="../assets/img/logo-pln.png" alt="Logo PLN" />
+            <h2>KPI <span>Dashboard</span></h2>
+        </div>
+
+        <div class="menu-section">Menu Utama</div>
+        <div class="menu-item" onclick="location.href='../dashboard/index.html'">
+            <i class="fas fa-th-large"></i><span>Dashboard</span>
+        </div>
+        <div class="menu-item"><i class="fas fa-chart-pie"></i><span>Info Grafis</span></div>
+        <div class="menu-item"><i class="fas fa-tasks"></i><span>Master KPI</span></div>
+        <div class="menu-item"><i class="fas fa-bullseye"></i><span>Target KPI</span></div>
+
+        <div class="menu-section" style="margin-top:8px;">Realisasi &amp; Monitoring</div>
+        <div class="menu-item"><i class="fas fa-check-circle"></i><span>Realisasi KPI</span></div>
+        <div class="sub-menu">
+            <div class="menu-item"><i class="fas fa-pen"></i><span>Input Manual</span></div>
+            <div class="menu-item"><i class="fas fa-file-import"></i><span>Import Data</span></div>
+            <div class="menu-item"><i class="fas fa-check-double"></i><span>Verifikasi KPI</span></div>
+            <div class="menu-item"><i class="fas fa-file-alt"></i><span>Rekap NKO</span></div>
+            <div class="menu-item"><i class="fas fa-chart-line"></i><span>Status KPI</span></div>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">Data Support</div>
+        <div class="menu-item"><i class="fas fa-database"></i><span>Data Pendukung</span></div>
+        <div class="menu-item active"><i class="fas fa-link"></i><span>Integrasi Pendukung</span></div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">System</div>
+        <div class="menu-item"><i class="fas fa-users-cog"></i><span>User Management</span></div>
+        <div class="menu-item"><i class="fas fa-cog"></i><span>Pengaturan</span></div>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="top-header">
+            <div class="page-title">
+                <h1><i class="fas fa-link"></i> Integrasi Pendukung</h1>
+                <p>Kelola integrasi dengan sistem pendukung</p>
+            </div>
+            <div class="top-right">
+                <div class="notification-icon"><i class="fas fa-bell"></i><span class="badge-dot"></span></div>
+                <div class="user-profile">
+                    <div class="avatar">JD</div>
+                    <div class="user-name">Jerni Diana <small>Admin KPI</small></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="breadcrumb">
+            <i class="fas fa-home"></i>
+            <span>Data Support</span>
+            <span class="separator">›</span>
+            <span>Integrasi Pendukung</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-plug"></i></div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">Total Integrasi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle" style="color:#0f7b3e;"></i></div>
+                <div class="stat-number">6</div>
+                <div class="stat-label">Terkoneksi</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle" style="color:#b87a1a;"></i></div>
+                <div class="stat-number">1</div>
+                <div class="stat-label">Dalam Proses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-times-circle" style="color:#b33a3a;"></i></div>
+                <div class="stat-number">1</div>
+                <div class="stat-label">Terputus</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Status:</label>
+                <select>
+                    <option>Semua</option>
+                    <option>Terkoneksi</option>
+                    <option>Dalam Proses</option>
+                    <option>Terputus</option>
+                </select>
+            </div>
+            <div class="filter-group" style="flex:1;">
+                <label>Cari:</label>
+                <input type="text" placeholder="Cari integrasi..." style="flex:1;min-width:150px;" />
+            </div>
+            <button class="btn-primary"><i class="fas fa-plus"></i> Tambah Integrasi</button>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-list-ul"></i> Daftar Integrasi Pendukung</h3>
+                <div class="table-actions">
+                    <span class="badge-count"><i class="fas fa-plug"></i> 8 Integrasi</span>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:40px;"><i class="fas fa-hashtag"></i> No</th>
+                            <th><i class="fas fa-server"></i> Nama Sistem</th>
+                            <th><i class="fas fa-code-branch"></i> Jenis Integrasi</th>
+                            <th><i class="fas fa-link"></i> URL / Endpoint</th>
+                            <th><i class="fas fa-circle"></i> Status</th>
+                            <th><i class="fas fa-clock"></i> Terakhir Sinkron</th>
+                            <th style="text-align:center;"><i class="fas fa-tools"></i> Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center;font-weight:600;">1</td>
+                            <td>
+                                <div class="item-cell">
+                                    <div class="item-avatar" style="background:#0f7b3e;">SC</div>
+                                    <div class="item-name-detail">
+                                        <span class="name">SCADA PLN</span>
+                                        <span class="sub">INT-001</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>API REST</td>
+                            <td>https://scada.pln.co.id/api</td>
+                            <td><span class="status-badge connected"><i class="fas fa-check-circle"></i> Terkoneksi</span></td>
+                            <td>26/08/2026 14:30</td>
+                            <td>
+                                <div class="action-group-table">
+                                    <span class="action-link" title="Detail"><i class="fas fa-eye"></i></span>
+                                    <span class="action-link" title="Sinkron"><i class="fas fa-sync"></i></span>
+                                    <span class="action-link" title="Edit"><i class="fas fa-edit"></i></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center;font-weight:600;">2</td>
+                            <td>
+                                <div class="item-cell">
+                                    <div class="item-avatar" style="background:#0f7b3e;">SI</div>
+                                    <div class="item-name-detail">
+                                        <span class="name">Sistem Informasi Pelanggan</span>
+                                        <span class="sub">INT-002</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>API REST</td>
+                            <td>https://sip.pln.co.id/api</td>
+                            <td><span class="status-badge connected"><i class="fas fa-check-circle"></i> Terkoneksi</span></td>
+                            <td>26/08/2026 14:15</td>
+                            <td>
+                                <div class="action-group-table">
+                                    <span class="action-link"><i class="fas fa-eye"></i></span>
+                                    <span class="action-link"><i class="fas fa-sync"></i></span>
+                                    <span class="action-link"><i class="fas fa-edit"></i></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center;font-weight:600;">3</td>
+                            <td>
+                                <div class="item-cell">
+                                    <div class="item-avatar" style="background:#0f7b3e;">SK</div>
+                                    <div class="item-name-detail">
+                                        <span class="name">Sistem Keuangan</span>
+                                        <span class="sub">INT-003</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Database</td>
+                            <td>jdbc:postgresql://keuangan:5432</td>
+                            <td><span class="status-badge connected"><i class="fas fa-check-circle"></i> Terkoneksi</span></td>
+                            <td>26/08/2026 13:45</td>
+                            <td>
+                                <div class="action-group-table">
+                                    <span class="action-link"><i class="fas fa-eye"></i></span>
+                                    <span class="action-link"><i class="fas fa-sync"></i></span>
+                                    <span class="action-link"><i class="fas fa-edit"></i></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center;font-weight:600;">4</td>
+                            <td>
+                                <div class="item-cell">
+                                    <div class="item-avatar" style="background:#b87a1a;">GI</div>
+                                    <div class="item-name-detail">
+                                        <span class="name">GIS PLN</span>
+                                        <span class="sub">INT-004</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>API REST</td>
+                            <td>https://gis.pln.co.id/api</td>
+                            <td><span class="status-badge progress"><i class="fas fa-clock"></i> Dalam Proses</span></td>
+                            <td>25/08/2026 09:00</td>
+                            <td>
+                                <div class="action-group-table">
+                                    <span class="action-link"><i class="fas fa-eye"></i></span>
+                                    <span class="action-link"><i class="fas fa-sync"></i></span>
+                                    <span class="action-link"><i class="fas fa-edit"></i></span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center;font-weight:600;">5</td>
+                            <td>
+                                <div class="item-cell">
+                                    <div class="item-avatar" style="background:#b33a3a;">HR</div>
+                                    <div class="item-name-detail">
+                                        <span class="name">Sistem HRIS</span>
+                                        <span class="sub">INT-005</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>API REST</td>
+                            <td>https://hris.pln.co.id/api</td>
+                            <td><span class="status-badge disconnected"><i class="fas fa-times-circle"></i> Terputus</span></td>
+                            <td>20/08/2026 16:00</td>
+                            <td>
+                                <div class="action-group-table">
+                                    <span class="action-link"><i class="fas fa-eye"></i></span>
+                                    <span class="action-link"><i class="fas fa-sync"></i></span>
+                                    <span class="action-link"><i class="fas fa-edit"></i></span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <span>Menampilkan 1 - 5 dari 8 data</span>
+                <div class="pagination">
+                    <span><i class="fas fa-chevron-left"></i></span>
+                    <span class="active">1</span>
+                    <span>2</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
