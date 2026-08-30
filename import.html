@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Import Data Realisasi KPI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS untuk baca file Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
@@ -21,7 +20,6 @@
             min-height: 100vh;
         }
 
-        /* ===== SIDEBAR KIRI ===== */
         .sidebar {
             width: 240px;
             background: #0b2a4a;
@@ -113,15 +111,6 @@
             color: #7cb8ff;
         }
 
-        .menu-item .badge {
-            margin-left: auto;
-            background: #1e4a6e;
-            padding: 1px 10px;
-            border-radius: 30px;
-            font-size: 10px;
-            color: #b6d4f0;
-        }
-
         .sub-menu {
             padding-left: 20px;
         }
@@ -137,13 +126,22 @@
             width: 18px;
         }
 
+        .sub-menu .menu-item.active-sub {
+            background: #143a5a;
+            color: white;
+            border-left-color: #4a9eff;
+        }
+
+        .sub-menu .menu-item.active-sub i {
+            color: #7cb8ff;
+        }
+
         .menu-divider {
             height: 1px;
             background: #1a3d5e;
             margin: 8px 20px;
         }
 
-        /* ===== MAIN CONTENT ===== */
         .main-content {
             flex: 1;
             padding: 24px 32px 40px 32px;
@@ -151,7 +149,6 @@
             overflow-x: auto;
         }
 
-        /* ===== TOP HEADER ===== */
         .top-header {
             display: flex;
             justify-content: space-between;
@@ -246,6 +243,17 @@
             background: #e74c3c;
             border-radius: 50%;
             border: 2px solid white;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
         }
 
         .breadcrumb {
@@ -269,7 +277,6 @@
             color: #b0c4db;
         }
 
-        /* ===== PROGRESS STEPS (dengan garis biru) ===== */
         .progress-steps {
             display: flex;
             align-items: center;
@@ -277,16 +284,21 @@
             margin: 24px 0 32px 0;
             position: relative;
             padding: 0 10px;
+            background: white;
+            border-radius: 14px;
+            padding: 20px 30px;
+            border: 1px solid #e6edf6;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
 
         .progress-steps::before {
             content: '';
             position: absolute;
-            top: 24px;
-            left: 40px;
-            right: 40px;
+            top: 40px;
+            left: 60px;
+            right: 60px;
             height: 3px;
-            background: #d0dcee;
+            background: #e6edf6;
             z-index: 0;
         }
 
@@ -300,18 +312,18 @@
         }
 
         .progress-steps .step .step-circle {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: #d0dcee;
-            color: #5a7290;
+            background: #eef3f9;
+            color: #8aa3c0;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 16px;
-            transition: 0.3s;
-            border: 3px solid #d0dcee;
+            font-size: 15px;
+            transition: 0.4s;
+            border: 3px solid #eef3f9;
             position: relative;
         }
 
@@ -319,21 +331,24 @@
             background: #0b2a4a;
             color: white;
             border-color: #0b2a4a;
-            box-shadow: 0 0 0 4px rgba(11, 42, 74, 0.2);
+            box-shadow: 0 0 0 6px rgba(11, 42, 74, 0.15);
+            transform: scale(1.05);
         }
 
         .progress-steps .step.done .step-circle {
             background: #0f7b3e;
             color: white;
             border-color: #0f7b3e;
+            box-shadow: 0 0 0 4px rgba(15, 123, 62, 0.15);
         }
 
         .progress-steps .step .step-label {
             font-size: 12px;
             font-weight: 500;
-            color: #5a7290;
+            color: #8aa3c0;
             margin-top: 8px;
             text-align: center;
+            transition: 0.3s;
         }
 
         .progress-steps .step.active .step-label {
@@ -345,15 +360,18 @@
             color: #0f7b3e;
         }
 
-        /* Garis biru progress */
-        .progress-steps .step.active .step-line,
-        .progress-steps .step.done .step-line {
+        .progress-steps .step .step-icon {
+            font-size: 16px;
+        }
+
+        .progress-steps .step .step-line {
             position: absolute;
-            top: 24px;
-            left: 50%;
-            width: 100%;
+            top: 22px;
+            left: calc(50% + 22px);
+            width: calc(100% - 44px);
             height: 3px;
             z-index: -1;
+            transition: 0.4s;
         }
 
         .progress-steps .step.active .step-line {
@@ -368,20 +386,19 @@
             display: none;
         }
 
-        /* ===== CONTENT STEPS ===== */
         .step-content {
             display: none;
-            animation: fadeIn 0.3s ease;
+            animation: fadeInUp 0.4s ease;
         }
 
         .step-content.active {
             display: block;
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -389,16 +406,16 @@
             }
         }
 
-        /* ===== INFO IMPORT ===== */
         .info-import-box {
             background: white;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 18px 24px;
             border: 1px solid #e6edf6;
             display: flex;
             flex-wrap: wrap;
             gap: 30px 50px;
             margin-bottom: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
 
         .info-import-box .info-item {
@@ -421,7 +438,14 @@
             color: #0b2a4a;
         }
 
-        /* ===== UPLOAD AREA ===== */
+        .info-import-box .info-item .value .badge-area {
+            background: #0b2a4a;
+            color: white;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+        }
+
         .upload-area {
             background: white;
             border: 2px dashed #b6cee9;
@@ -429,29 +453,55 @@
             padding: 48px 24px;
             text-align: center;
             margin-bottom: 24px;
-            transition: 0.2s;
+            transition: 0.3s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(11, 42, 74, 0.02), rgba(74, 158, 255, 0.05));
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .upload-area:hover::before {
+            opacity: 1;
         }
 
         .upload-area:hover {
             border-color: #4a9eff;
             background: #f8faff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
         }
 
-        .upload-area i {
-            font-size: 48px;
+        .upload-area .upload-icon {
+            font-size: 56px;
             color: #b6cee9;
             margin-bottom: 12px;
+            transition: 0.3s;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: #4a9eff;
+            transform: scale(1.05);
         }
 
         .upload-area h3 {
-            font-size: 16px;
+            font-size: 18px;
             color: #0b2a4a;
             margin-bottom: 4px;
         }
 
         .upload-area p {
-            font-size: 13px;
+            font-size: 14px;
             color: #6a85a5;
         }
 
@@ -467,13 +517,14 @@
             color: white;
             border: none;
             padding: 10px 32px;
-            border-radius: 20px;
+            border-radius: 30px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: 0.3s;
         }
 
         .upload-area .btn-upload i {
@@ -482,19 +533,59 @@
             margin: 0;
         }
 
+        .upload-area .btn-upload:hover {
+            background: #1a3d5e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(11, 42, 74, 0.3);
+        }
+
         .upload-area.file-uploaded {
             border-color: #0f7b3e;
             background: #f0f9f4;
         }
 
-        .upload-area.file-uploaded i {
+        .upload-area.file-uploaded .upload-icon {
             color: #0f7b3e;
         }
 
-        /* ===== DOWNLOAD TEMPLATE ===== */
+        .upload-progress {
+            display: none;
+            margin-top: 16px;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .upload-progress.show {
+            display: block;
+        }
+
+        .upload-progress .progress-track {
+            height: 6px;
+            background: #eef3f9;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .upload-progress .progress-track .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0b2a4a, #4a9eff);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .upload-progress .progress-text {
+            font-size: 12px;
+            color: #5a7290;
+            margin-top: 6px;
+            text-align: center;
+        }
+
         .download-template {
-            background: #f5f9ff;
-            border: 1px solid #e6edf6;
+            background: linear-gradient(135deg, #f5f9ff 0%, #e8f0fe 100%);
+            border: 1px solid #d0dcee;
             border-radius: 12px;
             padding: 16px 22px;
             display: flex;
@@ -503,6 +594,11 @@
             flex-wrap: wrap;
             gap: 12px;
             margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .download-template:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
         }
 
         .download-template .left {
@@ -512,7 +608,7 @@
         }
 
         .download-template .left i {
-            font-size: 32px;
+            font-size: 36px;
             color: #1f5b9e;
         }
 
@@ -532,21 +628,27 @@
             background: #1f5b9e;
             color: white;
             border: none;
-            padding: 8px 22px;
-            border-radius: 40px;
+            padding: 8px 24px;
+            border-radius: 30px;
             font-weight: 500;
             font-size: 14px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            transition: 0.3s;
         }
 
         .btn-excel i {
             font-size: 16px;
         }
 
-        /* ===== INFO LIST ===== */
+        .btn-excel:hover {
+            background: #2a6db8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(31, 91, 158, 0.3);
+        }
+
         .info-list {
             background: #fafcff;
             border-radius: 12px;
@@ -559,24 +661,27 @@
         }
 
         .info-list li {
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             display: flex;
             gap: 10px;
+            align-items: flex-start;
         }
 
         .info-list li::before {
             content: "•";
             color: #1f5b9e;
             font-weight: bold;
+            font-size: 18px;
+            line-height: 1;
         }
 
-        /* ===== PREVIEW TABLE ===== */
         .preview-table-wrap {
             background: white;
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid #e6edf6;
             overflow: hidden;
             margin-bottom: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
         }
 
         .preview-table-wrap .preview-header {
@@ -645,20 +750,19 @@
             background: #f8faff;
         }
 
-        /* ===== STATUS COLOR ===== */
         .status-indicator {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 2px 10px 2px 6px;
+            padding: 3px 12px 3px 8px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 12px;
         }
 
         .status-indicator .dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             display: inline-block;
         }
@@ -695,7 +799,111 @@
             background: #8aa3c0;
         }
 
-        /* ===== ACTION BUTTONS ===== */
+        .mapping-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .mapping-item {
+            background: #f8faff;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid #e6edf6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .mapping-item:hover {
+            border-color: #4a9eff;
+            background: #f0f5fe;
+        }
+
+        .mapping-item .mapping-label {
+            font-weight: 600;
+            color: #0b2a4a;
+            font-size: 13px;
+        }
+
+        .mapping-item .mapping-value {
+            font-size: 13px;
+            color: #5a7290;
+        }
+
+        .mapping-item .mapping-value .badge-match {
+            background: #e6f7ed;
+            color: #0f7b3e;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .confirmation-box {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #e6edf6;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .confirmation-box .confirmation-icon {
+            font-size: 64px;
+            color: #0f7b3e;
+            margin-bottom: 16px;
+        }
+
+        .confirmation-box h3 {
+            font-size: 20px;
+            color: #0b2a4a;
+            margin-bottom: 8px;
+        }
+
+        .confirmation-box p {
+            color: #5a7290;
+            font-size: 14px;
+        }
+
+        .confirmation-box .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+            padding: 20px;
+            background: #f8faff;
+            border-radius: 12px;
+        }
+
+        .confirmation-box .summary .summary-item {
+            text-align: center;
+        }
+
+        .confirmation-box .summary .summary-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0b2a4a;
+        }
+
+        .confirmation-box .summary .summary-item .number.green {
+            color: #0f7b3e;
+        }
+        .confirmation-box .summary .summary-item .number.yellow {
+            color: #b87a1a;
+        }
+        .confirmation-box .summary .summary-item .number.red {
+            color: #b33a3a;
+        }
+
+        .confirmation-box .summary .summary-item .label {
+            font-size: 12px;
+            color: #6a85a5;
+        }
+
         .action-buttons {
             display: flex;
             gap: 12px;
@@ -721,13 +929,14 @@
             color: #1a3452;
             border: 1px solid #d0dcee;
             padding: 10px 28px;
-            border-radius: 20px;
+            border-radius: 30px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: 0.3s;
         }
 
         .btn-secondary i {
@@ -736,11 +945,13 @@
 
         .btn-secondary:hover {
             background: #dde6f2;
+            transform: translateY(-2px);
         }
 
         .btn-secondary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
         .btn-primary {
@@ -748,13 +959,14 @@
             color: white;
             border: none;
             padding: 10px 28px;
-            border-radius: 20px;
+            border-radius: 30px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: 0.3s;
         }
 
         .btn-primary i {
@@ -763,25 +975,30 @@
 
         .btn-primary:hover {
             background: #1a3d5e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(11, 42, 74, 0.3);
         }
 
         .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
         .btn-success {
-            background: #0f7b3e;
+            background: linear-gradient(135deg, #0f7b3e, #0f8a4a);
             color: white;
             border: none;
             padding: 10px 28px;
-            border-radius: 20px;
+            border-radius: 30px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(15, 123, 62, 0.3);
         }
 
         .btn-success i {
@@ -789,70 +1006,109 @@
         }
 
         .btn-success:hover {
-            background: #0f8a4a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(15, 123, 62, 0.4);
         }
 
         .btn-success:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
         }
 
-        /* ===== CONFIRMATION ===== */
-        .confirmation-box {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e6edf6;
-            padding: 32px;
-            text-align: center;
-            margin-bottom: 20px;
+        .btn-danger {
+            background: linear-gradient(135deg, #b33a3a, #c94444);
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(179, 58, 58, 0.3);
         }
 
-        .confirmation-box i {
-            font-size: 64px;
-            color: #0f7b3e;
-            margin-bottom: 16px;
-        }
-
-        .confirmation-box h3 {
-            font-size: 20px;
-            color: #0b2a4a;
-            margin-bottom: 8px;
-        }
-
-        .confirmation-box p {
-            color: #5a7290;
+        .btn-danger i {
             font-size: 14px;
         }
 
-        .confirmation-box .summary {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin: 24px 0;
-            padding: 20px;
-            background: #f8faff;
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(179, 58, 58, 0.4);
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: #0b2a4a;
+            color: white;
+            padding: 16px 24px;
             border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            animation: slideInRight 0.4s ease;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .confirmation-box .summary .summary-item {
-            text-align: center;
+        .toast.success {
+            background: #0f7b3e;
         }
 
-        .confirmation-box .summary .summary-item .number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #0b2a4a;
+        .toast.error {
+            background: #b33a3a;
         }
 
-        .confirmation-box .summary .summary-item .label {
-            font-size: 12px;
-            color: #6a85a5;
+        .toast.warning {
+            background: #b87a1a;
         }
 
-        /* ===== RESPONSIVE ===== */
+        .toast.info {
+            background: #0b2a4a;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 1024px) {
             .confirmation-box .summary {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .mapping-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -907,13 +1163,15 @@
             }
             .action-buttons .btn-secondary,
             .action-buttons .btn-primary,
-            .action-buttons .btn-success {
+            .action-buttons .btn-success,
+            .action-buttons .btn-danger {
                 width: 100%;
                 justify-content: center;
             }
             .progress-steps {
                 flex-direction: column;
                 gap: 12px;
+                padding: 16px;
             }
             .progress-steps::before {
                 display: none;
@@ -932,13 +1190,13 @@
             .progress-steps .step .step-label {
                 margin-top: 0;
             }
+            .progress-steps .step .step-line {
+                display: none;
+            }
             .confirmation-box .summary {
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
-        }
-
-        @media (max-width: 480px) {
             .top-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -947,12 +1205,29 @@
                 width: 100%;
                 justify-content: flex-end;
             }
+            .upload-area {
+                padding: 32px 16px;
+            }
+            .upload-area .upload-icon {
+                font-size: 40px;
+            }
+            .upload-area h3 {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .confirmation-box {
+                padding: 20px;
+            }
+            .confirmation-box .confirmation-icon {
+                font-size: 40px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== SIDEBAR KIRI ===== -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <img src="logo-pln.png" alt="Logo PLN" />
@@ -987,19 +1262,19 @@
                 <i class="fas fa-pen"></i>
                 <span>Input Manual</span>
             </div>
-            <div class="menu-item" style="font-weight:500;color:white;border-left-color:#4a9eff;" onclick="goToImport()">
+            <div class="menu-item active-sub" onclick="goToImport()">
                 <i class="fas fa-file-import" style="color:#7cb8ff;"></i>
                 <span>Import Data</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item" onclick="goToVerifikasi()">
                 <i class="fas fa-check-double"></i>
                 <span>Verifikasi KPI</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item" onclick="goToRekapNKO()">
                 <i class="fas fa-file-alt"></i>
                 <span>Rekap NKO</span>
             </div>
-            <div class="menu-item">
+            <div class="menu-item" onclick="goToStatusKPI()">
                 <i class="fas fa-chart-line"></i>
                 <span>Status KPI</span>
             </div>
@@ -1030,14 +1305,12 @@
         </div>
     </aside>
 
-    <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content">
 
-        <!-- TOP HEADER -->
         <div class="top-header">
             <div class="page-title">
                 <h1>Import Data Realisasi KPI</h1>
-                <p>Upload data realisasi KPI dari file Excel</p>
+                <p>Upload data realisasi KPI dari file Excel dengan mudah</p>
             </div>
             <div class="top-right">
                 <div class="notification-icon">
@@ -1054,7 +1327,6 @@
             </div>
         </div>
 
-        <!-- BREADCRUMB -->
         <div class="breadcrumb">
             <i class="fas fa-home"></i>
             <span>Realisasi KPI</span>
@@ -1062,35 +1334,33 @@
             <span>Import Data</span>
         </div>
 
-        <!-- ===== PROGRESS STEPS ===== -->
         <div class="progress-steps" id="progressSteps">
             <div class="step active" data-step="1">
-                <div class="step-circle">1</div>
+                <div class="step-circle"><i class="fas fa-upload step-icon"></i></div>
                 <div class="step-label">Upload File</div>
                 <div class="step-line"></div>
             </div>
             <div class="step" data-step="2">
-                <div class="step-circle">2</div>
+                <div class="step-circle"><i class="fas fa-arrows-alt-h step-icon"></i></div>
                 <div class="step-label">Pemetaan Data</div>
                 <div class="step-line"></div>
             </div>
             <div class="step" data-step="3">
-                <div class="step-circle">3</div>
+                <div class="step-circle"><i class="fas fa-eye step-icon"></i></div>
                 <div class="step-label">Preview Data</div>
                 <div class="step-line"></div>
             </div>
             <div class="step" data-step="4">
-                <div class="step-circle">4</div>
+                <div class="step-circle"><i class="fas fa-check step-icon"></i></div>
                 <div class="step-label">Konfirmasi Import</div>
                 <div class="step-line"></div>
             </div>
         </div>
 
-        <!-- ===== INFO IMPORT ===== -->
         <div class="info-import-box">
             <div class="info-item">
                 <span class="label">Area</span>
-                <span class="value">Sulawesi Tengah</span>
+                <span class="value"><span class="badge-area">Sulawesi, Maluku, Papua, Nusa Tenggara</span></span>
             </div>
             <div class="info-item">
                 <span class="label">Unit</span>
@@ -1102,11 +1372,9 @@
             </div>
         </div>
 
-        <!-- ===== STEP 1: UPLOAD FILE ===== -->
         <div class="step-content active" id="step1">
-            <!-- UPLOAD AREA -->
             <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                <i class="fas fa-cloud-upload-alt"></i>
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                 <h3>Upload File Excel</h3>
                 <p>Klik atau seret file ke area ini</p>
                 <div class="file-types">Format yang didukung: .xlsx, .xls</div>
@@ -1114,9 +1382,14 @@
                 <button class="btn-upload" onclick="event.stopPropagation(); document.getElementById('fileInput').click();">
                     <i class="fas fa-upload"></i> Pilih File
                 </button>
+                <div class="upload-progress" id="uploadProgress">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0%</div>
+                </div>
             </div>
 
-            <!-- DOWNLOAD TEMPLATE -->
             <div class="download-template">
                 <div class="left">
                     <i class="fas fa-file-excel"></i>
@@ -1130,7 +1403,6 @@
                 </button>
             </div>
 
-            <!-- INFO LIST -->
             <ul class="info-list">
                 <li>Pastikan file Excel sesuai dengan template yang tersedia.</li>
                 <li>Data akan ditambahkan atau diperbarui berdasarkan Unit dan Periode yang dipilih.</li>
@@ -1139,9 +1411,8 @@
             </ul>
         </div>
 
-        <!-- ===== STEP 2: PEMETAAN DATA ===== -->
         <div class="step-content" id="step2">
-            <div style="background:white;border-radius:12px;border:1px solid #e6edf6;padding:24px;margin-bottom:20px;">
+            <div style="background:white;border-radius:14px;border:1px solid #e6edf6;padding:24px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,0.04);">
                 <h4 style="color:#0b2a4a;margin-bottom:16px;">
                     <i class="fas fa-arrows-alt-h" style="color:#4a7aa0;margin-right:8px;"></i>
                     Pemetaan Kolom Data
@@ -1149,30 +1420,22 @@
                 <p style="color:#5a7290;font-size:14px;margin-bottom:16px;">
                     Cocokkan kolom dari file Excel dengan field di sistem:
                 </p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div style="background:#f8faff;padding:12px 16px;border-radius:8px;border:1px solid #e6edf6;">
-                        <span style="font-weight:600;color:#0b2a4a;">Indikator KPI</span>
-                        <span style="display:block;font-size:13px;color:#5a7290;margin-top:4px;">
-                            <i class="fas fa-check-circle" style="color:#0f7b3e;"></i> Terpetakan ke kolom "Indikator"
-                        </span>
+                <div class="mapping-grid">
+                    <div class="mapping-item">
+                        <span class="mapping-label"><i class="fas fa-tag" style="color:#4a7aa0;margin-right:8px;"></i>Indikator KPI</span>
+                        <span class="mapping-value"><span class="badge-match"><i class="fas fa-check"></i> Terpetakan</span></span>
                     </div>
-                    <div style="background:#f8faff;padding:12px 16px;border-radius:8px;border:1px solid #e6edf6;">
-                        <span style="font-weight:600;color:#0b2a4a;">Target</span>
-                        <span style="display:block;font-size:13px;color:#5a7290;margin-top:4px;">
-                            <i class="fas fa-check-circle" style="color:#0f7b3e;"></i> Terpetakan ke kolom "Target"
-                        </span>
+                    <div class="mapping-item">
+                        <span class="mapping-label"><i class="fas fa-flag" style="color:#4a7aa0;margin-right:8px;"></i>Target</span>
+                        <span class="mapping-value"><span class="badge-match"><i class="fas fa-check"></i> Terpetakan</span></span>
                     </div>
-                    <div style="background:#f8faff;padding:12px 16px;border-radius:8px;border:1px solid #e6edf6;">
-                        <span style="font-weight:600;color:#0b2a4a;">Realisasi</span>
-                        <span style="display:block;font-size:13px;color:#5a7290;margin-top:4px;">
-                            <i class="fas fa-check-circle" style="color:#0f7b3e;"></i> Terpetakan ke kolom "Realisasi"
-                        </span>
+                    <div class="mapping-item">
+                        <span class="mapping-label"><i class="fas fa-chart-simple" style="color:#4a7aa0;margin-right:8px;"></i>Realisasi</span>
+                        <span class="mapping-value"><span class="badge-match"><i class="fas fa-check"></i> Terpetakan</span></span>
                     </div>
-                    <div style="background:#f8faff;padding:12px 16px;border-radius:8px;border:1px solid #e6edf6;">
-                        <span style="font-weight:600;color:#0b2a4a;">Satuan</span>
-                        <span style="display:block;font-size:13px;color:#5a7290;margin-top:4px;">
-                            <i class="fas fa-check-circle" style="color:#0f7b3e;"></i> Terpetakan ke kolom "Satuan"
-                        </span>
+                    <div class="mapping-item">
+                        <span class="mapping-label"><i class="fas fa-ruler" style="color:#4a7aa0;margin-right:8px;"></i>Satuan</span>
+                        <span class="mapping-value"><span class="badge-match"><i class="fas fa-check"></i> Terpetakan</span></span>
                     </div>
                 </div>
                 <div style="margin-top:16px;padding:12px 16px;background:#fef9e6;border-radius:8px;border:1px solid #f1c40f;">
@@ -1182,7 +1445,6 @@
             </div>
         </div>
 
-        <!-- ===== STEP 3: PREVIEW DATA ===== -->
         <div class="step-content" id="step3">
             <div class="preview-table-wrap">
                 <div class="preview-header">
@@ -1218,28 +1480,26 @@
                 </div>
             </div>
 
-            <!-- Legend -->
             <div style="display:flex;gap:20px;flex-wrap:wrap;padding:12px 16px;background:#f8faff;border-radius:10px;border:1px solid #e6edf6;margin-bottom:20px;">
                 <span style="font-weight:600;color:#0b2a4a;font-size:12px;">Status Skor Akhir:</span>
                 <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#1a3452;">
                     <span class="dot" style="width:12px;height:12px;border-radius:50%;background:#0f7b3e;display:inline-block;"></span>
-                    ≥ 100 = Target tercapai / baik
+                    100 = Target tercapai / baik
                 </div>
                 <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#1a3452;">
                     <span class="dot" style="width:12px;height:12px;border-radius:50%;background:#f1c40f;display:inline-block;"></span>
-                    80–99,99 = Mendekati target / perlu perhatian
+                    80-99,99 = Mendekati target / perlu perhatian
                 </div>
                 <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#1a3452;">
                     <span class="dot" style="width:12px;height:12px;border-radius:50%;background:#e74c3c;display:inline-block;"></span>
-                    &lt; 80 = Belum mencapai target / perlu tindakan
+                    {'<'} 80 = Belum mencapai target / perlu tindakan
                 </div>
             </div>
         </div>
 
-        <!-- ===== STEP 4: KONFIRMASI IMPORT ===== -->
         <div class="step-content" id="step4">
             <div class="confirmation-box">
-                <i class="fas fa-check-circle"></i>
+                <div class="confirmation-icon"><i class="fas fa-check-circle"></i></div>
                 <h3>Konfirmasi Import Data</h3>
                 <p>Pastikan data berikut sudah benar sebelum diimport ke sistem.</p>
 
@@ -1249,16 +1509,16 @@
                         <div class="label">Total Baris Data</div>
                     </div>
                     <div class="summary-item">
-                        <div class="number" id="confirmGreen">0</div>
-                        <div class="label" style="color:#0f7b3e;">🟢 Target Tercapai</div>
+                        <div class="number green" id="confirmGreen">0</div>
+                        <div class="label"><i class="fas fa-circle" style="color:#0f7b3e;font-size:10px;"></i> Target Tercapai</div>
                     </div>
                     <div class="summary-item">
-                        <div class="number" id="confirmYellow">0</div>
-                        <div class="label" style="color:#b87a1a;">🟡 Mendekati Target</div>
+                        <div class="number yellow" id="confirmYellow">0</div>
+                        <div class="label"><i class="fas fa-circle" style="color:#f1c40f;font-size:10px;"></i> Mendekati Target</div>
                     </div>
                     <div class="summary-item">
-                        <div class="number" id="confirmRed">0</div>
-                        <div class="label" style="color:#b33a3a;">🔴 Perlu Tindakan</div>
+                        <div class="number red" id="confirmRed">0</div>
+                        <div class="label"><i class="fas fa-circle" style="color:#e74c3c;font-size:10px;"></i> Perlu Tindakan</div>
                     </div>
                 </div>
 
@@ -1269,7 +1529,6 @@
             </div>
         </div>
 
-        <!-- ===== ACTION BUTTONS ===== -->
         <div class="action-buttons">
             <div class="left-group">
                 <button class="btn-secondary" id="btnPrev" onclick="prevStep()" disabled>
@@ -1291,6 +1550,8 @@
 
     </main>
 
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
         // ===== NAVIGATION FUNCTIONS =====
         function goToDashboard() {
@@ -1305,11 +1566,42 @@
             window.location.href = 'manual.html';
         }
 
+        function goToVerifikasi() {
+            window.location.href = 'verifikasi.html';
+        }
+
+        function goToRekapNKO() {
+            window.location.href = 'rekapnko.html';
+        }
+
+        function goToStatusKPI() {
+            window.location.href = 'statuskpi.html';
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
+            };
+            toast.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${message}`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
         // ===== VARIABLES =====
         let currentStep = 1;
         const totalSteps = 4;
         let excelData = [];
-        let excelHeaders = [];
         let fileName = '';
 
         // ===== FILE UPLOAD =====
@@ -1319,19 +1611,40 @@
                 fileName = file.name;
                 const uploadArea = document.getElementById('uploadArea');
 
+                const progress = document.getElementById('uploadProgress');
+                progress.classList.add('show');
+
+                let progressValue = 0;
+                const interval = setInterval(() => {
+                    progressValue += 10;
+                    if (progressValue > 90) clearInterval(interval);
+                    document.getElementById('progressFill').style.width = progressValue + '%';
+                    document.getElementById('progressText').textContent = progressValue + '%';
+                }, 100);
+
                 uploadArea.innerHTML = `
-                    <i class="fas fa-file-excel" style="color:#1f5b9e;"></i>
+                    <div class="upload-icon"><i class="fas fa-file-excel" style="color:#1f5b9e;"></i></div>
                     <h3 style="color:#0f7b3e;">File siap diupload</h3>
                     <p style="font-weight:500;">${file.name}</p>
                     <div class="file-types">Ukuran: ${(file.size / 1024).toFixed(1)} KB</div>
                     <button class="btn-upload" onclick="event.stopPropagation(); document.getElementById('fileInput').click();">
                         <i class="fas fa-sync-alt"></i> Ganti File
                     </button>
+                    <div class="upload-progress show">
+                        <div class="progress-track">
+                            <div class="progress-fill" id="progressFill" style="width:90%;"></div>
+                        </div>
+                        <div class="progress-text">90%</div>
+                    </div>
                 `;
                 uploadArea.classList.add('file-uploaded');
 
-                // Baca file Excel
-                readExcelFile(file);
+                setTimeout(() => {
+                    readExcelFile(file);
+                    document.getElementById('progressFill').style.width = '100%';
+                    document.getElementById('progressText').textContent = '100% - Selesai!';
+                    showToast('File berhasil diupload!', 'success');
+                }, 500);
             }
         });
 
@@ -1346,15 +1659,13 @@
                     const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
                     if (jsonData.length > 0) {
-                        excelHeaders = Object.keys(jsonData[0]);
                         excelData = jsonData.map((row, index) => {
-                            // Ambil nilai dari kolom yang sesuai
                             const indikator = row['Indikator KPI'] || row['Indikator'] || row['KPI'] || '-';
                             const satuan = row['Satuan'] || '-';
                             const target = parseFloat(row['Target']) || 0;
                             const realisasi = parseFloat(row['Realisasi']) || 0;
                             const pencapaian = target > 0 ? (realisasi / target) * 100 : 0;
-                            const nilaiKPI = Math.min(pencapaian * (14 / 100), 14) || 0; // Simulasi bobot
+                            const nilaiKPI = Math.min(pencapaian * (14 / 100), 14) || 0;
 
                             return {
                                 no: index + 1,
@@ -1368,15 +1679,14 @@
                             };
                         });
 
-                        // Update preview
                         updatePreview();
-                        // Enable next button
                         document.getElementById('btnNext').disabled = false;
+                        showToast(`${excelData.length} baris data berhasil dibaca`, 'success');
                     } else {
-                        alert('File Excel kosong atau tidak memiliki data.');
+                        showToast('File Excel kosong atau tidak memiliki data.', 'warning');
                     }
                 } catch (error) {
-                    alert('Gagal membaca file Excel. Pastikan format file benar.');
+                    showToast('Gagal membaca file Excel. Pastikan format file benar.', 'error');
                     console.error(error);
                 }
             };
@@ -1393,7 +1703,6 @@
         // ===== UPDATE PREVIEW =====
         function updatePreview() {
             const tbody = document.getElementById('previewBody');
-            const header = document.getElementById('previewHeader');
             const fileNamePreview = document.getElementById('fileNamePreview');
             const rowCountPreview = document.getElementById('rowCountPreview');
 
@@ -1434,8 +1743,6 @@
             });
 
             tbody.innerHTML = html;
-
-            // Update konfirmasi
             updateConfirmation();
         }
 
@@ -1475,17 +1782,16 @@
             const ws = XLSX.utils.aoa_to_sheet(wsData);
             XLSX.utils.book_append_sheet(wb, ws, 'Template');
             XLSX.writeFile(wb, 'Template_Import_KPI.xlsx');
+            showToast('Template berhasil didownload!', 'success');
         }
 
         // ===== NAVIGATION =====
         function nextStep() {
             if (currentStep < totalSteps) {
-                // Validasi untuk step 1: file harus diupload
                 if (currentStep === 1 && excelData.length === 0) {
-                    alert('Silakan upload file Excel terlebih dahulu.');
+                    showToast('Silakan upload file Excel terlebih dahulu.', 'warning');
                     return;
                 }
-
                 currentStep++;
                 updateStepUI();
             }
@@ -1499,7 +1805,6 @@
         }
 
         function updateStepUI() {
-            // Update step circles
             const steps = document.querySelectorAll('.progress-steps .step');
             steps.forEach((step, index) => {
                 const stepNum = index + 1;
@@ -1511,7 +1816,6 @@
                 }
             });
 
-            // Update content
             document.querySelectorAll('.step-content').forEach((content, index) => {
                 content.classList.remove('active');
                 if (index + 1 === currentStep) {
@@ -1519,7 +1823,6 @@
                 }
             });
 
-            // Update buttons
             document.getElementById('btnPrev').disabled = (currentStep === 1);
             const btnNext = document.getElementById('btnNext');
             const btnImport = document.getElementById('btnImport');
@@ -1532,34 +1835,31 @@
                 btnImport.style.display = 'none';
             }
 
-            // Jika di step 3, refresh preview
             if (currentStep === 3 && excelData.length > 0) {
                 updatePreview();
             }
-
-            // Jika di step 4, update konfirmasi
             if (currentStep === 4 && excelData.length > 0) {
                 updateConfirmation();
             }
 
-            // Scroll ke atas
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // ===== CONFIRM IMPORT =====
         function confirmImport() {
             if (excelData.length === 0) {
-                alert('Tidak ada data untuk diimport.');
+                showToast('Tidak ada data untuk diimport.', 'warning');
                 return;
             }
 
             if (confirm(`Apakah Anda yakin ingin mengimport ${excelData.length} baris data untuk periode Juli 2026?`)) {
-                alert(`✅ Berhasil! ${excelData.length} data berhasil diimport ke sistem.\n\n` +
-                    `🟢 Target Tercapai: ${document.getElementById('confirmGreen').textContent}\n` +
-                    `🟡 Mendekati Target: ${document.getElementById('confirmYellow').textContent}\n` +
-                    `🔴 Perlu Tindakan: ${document.getElementById('confirmRed').textContent}`);
-                // Redirect ke dashboard
-                window.location.href = 'index.html';
+                const green = document.getElementById('confirmGreen').textContent;
+                const yellow = document.getElementById('confirmYellow').textContent;
+                const red = document.getElementById('confirmRed').textContent;
+                showToast(`${excelData.length} data berhasil diimport ke sistem. Target Tercapai: ${green}, Mendekati Target: ${yellow}, Perlu Tindakan: ${red}`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
             }
         }
 
@@ -1591,7 +1891,7 @@
                     document.getElementById('fileInput').files = files;
                     document.getElementById('fileInput').dispatchEvent(new Event('change'));
                 } else {
-                    alert('Hanya file Excel (.xlsx, .xls) yang didukung.');
+                    showToast('Hanya file Excel (.xlsx, .xls) yang didukung.', 'error');
                 }
             }
         });
