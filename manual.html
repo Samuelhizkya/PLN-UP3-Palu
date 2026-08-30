@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Manual Realisasi KPI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f7;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR KIRI ===== */
+        .sidebar {
+            width: 240px;
+            background: #0b2a4a;
+            color: #e0e9f5;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #2a5a7a;
+            border-radius: 10px;
+        }
+
+        .sidebar-brand {
+            padding: 0 20px 18px 20px;
+            border-bottom: 1px solid #1a3d5e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .sidebar-brand h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.3px;
+        }
+
+        .sidebar-brand h2 span {
+            font-weight: 300;
+            color: #8ab3d6;
+        }
+
+        .menu-section {
+            padding: 16px 20px 6px 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #6e92b5;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            padding: 10px 20px 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13.5px;
+            color: #b6cde0;
+            cursor: pointer;
+            transition: 0.15s;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: #143a5a;
+            color: white;
+        }
+
+        .menu-item.active {
+            background: #143a5a;
+            color: white;
+            border-left-color: #4a9eff;
+        }
+
+        .menu-item i {
+            width: 20px;
+            font-size: 15px;
+            color: #6a92b8;
+        }
+
+        .menu-item.active i {
+            color: #7cb8ff;
+        }
+
+        .menu-item .badge {
+            margin-left: auto;
+            background: #1e4a6e;
+            padding: 1px 10px;
+            border-radius: 30px;
+            font-size: 10px;
+            color: #b6d4f0;
+        }
+
+        .sub-menu {
+            padding-left: 20px;
+        }
+
+        .sub-menu .menu-item {
+            font-size: 12.5px;
+            padding: 6px 20px 6px 20px;
+            border-left: 3px solid transparent;
+        }
+
+        .sub-menu .menu-item i {
+            font-size: 11px;
+            width: 18px;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: #1a3d5e;
+            margin: 8px 20px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            padding: 24px 32px 40px 32px;
+            background: #f0f2f7;
+            overflow-x: auto;
+        }
+
+        /* ===== TOP HEADER ===== */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0b2a4a;
+        }
+
+        .page-title p {
+            color: #5a7290;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 4px 16px 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dcee;
+        }
+
+        .user-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #0b2a4a;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-profile .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #0b2a4a;
+        }
+
+        .user-profile .user-name small {
+            font-weight: 400;
+            color: #6a85a5;
+            font-size: 11px;
+            display: block;
+            margin-top: -2px;
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            color: #4a6a8a;
+            cursor: pointer;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d0dcee;
+            transition: 0.2s;
+        }
+
+        .notification-icon:hover {
+            background: #f0f5fe;
+            border-color: #4a9eff;
+        }
+
+        .notification-icon .badge-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #5a7290;
+            margin: 12px 0 18px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e6edf6;
+        }
+
+        .breadcrumb i {
+            margin-right: 6px;
+            color: #7e94b0;
+        }
+        .breadcrumb span {
+            color: #0b2a4a;
+            font-weight: 500;
+        }
+        .breadcrumb .separator {
+            margin: 0 6px;
+            color: #b0c4db;
+        }
+
+        /* ===== INFO BAR ===== */
+        .info-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 40px;
+            margin: 18px 0 22px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e6edf6;
+        }
+
+        .info-bar .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #1a3452;
+        }
+
+        .info-bar .info-item .label {
+            color: #6a85a5;
+            font-weight: 400;
+        }
+
+        .info-bar .info-item .value {
+            font-weight: 600;
+            background: #f0f5fe;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+        }
+
+        .info-bar .info-item .value.area {
+            background: #0b2a4a;
+            color: white;
+            padding: 4px 16px;
+        }
+
+        .info-bar .info-divider {
+            width: 1px;
+            background: #dde6f2;
+        }
+
+        /* ===== TABLE ===== */
+        .table-container {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #e6edf6;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .table-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e6edf6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+
+        .table-header .table-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .table-header .table-actions .badge-count {
+            background: #eef3f9;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #1a3452;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            padding: 0 4px 4px 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 900px;
+        }
+
+        thead {
+            background: #f5f8fd;
+        }
+
+        th {
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a3452;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid #e0e8f2;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eef3f9;
+            color: #1a3452;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #f8faff;
+        }
+
+        /* ===== INPUT STYLES ===== */
+        .input-realisasi {
+            width: 110px;
+            padding: 6px 10px;
+            border: 1px solid #d0dcee;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            transition: 0.2s;
+            background: #fafcff;
+        }
+
+        .input-realisasi:focus {
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.15);
+            background: white;
+        }
+
+        .input-realisasi.input-filled {
+            border-color: #0f7b3e;
+            background: #f0f9f4;
+        }
+
+        select.sumber-data {
+            padding: 6px 10px;
+            border: 1px solid #d0dcee;
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+            background: #fafcff;
+            cursor: pointer;
+            min-width: 130px;
+        }
+
+        select.sumber-data:focus {
+            border-color: #4a9eff;
+        }
+
+        .btn-check {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-check:hover {
+            background: #1a3d5e;
+        }
+
+        .btn-check.checked {
+            background: #0f7b3e;
+        }
+
+        /* ===== STATUS SCORE ===== */
+        .score-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 10px 2px 6px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .score-status .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .score-status.green {
+            background: #e6f7ed;
+            color: #0f7b3e;
+        }
+        .score-status.green .dot {
+            background: #0f7b3e;
+        }
+
+        .score-status.yellow {
+            background: #fef9e6;
+            color: #b87a1a;
+        }
+        .score-status.yellow .dot {
+            background: #f1c40f;
+        }
+
+        .score-status.red {
+            background: #fde8e8;
+            color: #b33a3a;
+        }
+        .score-status.red .dot {
+            background: #e74c3c;
+        }
+
+        .score-status.grey {
+            background: #f0f2f7;
+            color: #5a7290;
+        }
+        .score-status.grey .dot {
+            background: #8aa3c0;
+        }
+
+        /* ===== INFO TEXT ===== */
+        .info-text {
+            background: #f5f9ff;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin: 16px 0 20px 0;
+            border-left: 4px solid #4a9eff;
+            font-size: 13px;
+            color: #1a3452;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-text i {
+            font-size: 18px;
+            color: #4a7aa0;
+        }
+
+        /* ===== CATATAN ===== */
+        .catatan-area {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e6edf6;
+            padding: 16px 20px;
+            margin-top: 20px;
+        }
+
+        .catatan-area label {
+            font-weight: 600;
+            color: #0b2a4a;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .catatan-area textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d0dcee;
+            border-radius: 10px;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 60px;
+            outline: none;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        .catatan-area textarea:focus {
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            border-top: 1px solid #e6edf6;
+            padding-top: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: #eef3f9;
+            color: #1a3452;
+            border: 1px solid #d0dcee;
+            padding: 10px 28px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-secondary i {
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover {
+            background: #dde6f2;
+        }
+
+        .btn-warning {
+            background: #fef6e6;
+            color: #b87a1a;
+            border: 1px solid #f1c40f;
+            padding: 10px 28px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-warning i {
+            font-size: 14px;
+        }
+
+        .btn-warning:hover {
+            background: #fef0d5;
+        }
+
+        .btn-success {
+            background: #0f7b3e;
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .btn-success i {
+            font-size: 14px;
+        }
+
+        .btn-success:hover {
+            background: #0f8a4a;
+        }
+
+        /* ===== LEGEND ===== */
+        .legend-status {
+            display: flex;
+            gap: 20px;
+            margin: 12px 0 0 0;
+            padding: 10px 16px;
+            background: #f8faff;
+            border-radius: 10px;
+            border: 1px solid #e6edf6;
+            flex-wrap: wrap;
+        }
+
+        .legend-status .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #1a3452;
+        }
+
+        .legend-status .legend-item .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .legend-status .legend-item .dot.green {
+            background: #0f7b3e;
+        }
+        .legend-status .legend-item .dot.yellow {
+            background: #f1c40f;
+        }
+        .legend-status .legend-item .dot.red {
+            background: #e74c3c;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .table-wrap {
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 12px 0;
+            }
+            .sidebar-brand h2,
+            .menu-item span,
+            .menu-section,
+            .menu-item .badge,
+            .sub-menu {
+                display: none;
+            }
+            .sidebar-brand {
+                padding: 0 12px 12px 12px;
+                justify-content: center;
+            }
+            .sidebar-brand img {
+                height: 30px;
+            }
+            .menu-item {
+                padding: 12px 18px;
+                justify-content: center;
+            }
+            .menu-item i {
+                font-size: 18px;
+                width: auto;
+            }
+            .main-content {
+                padding: 16px;
+            }
+            .info-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .info-bar .info-divider {
+                display: none;
+            }
+            .top-right .user-profile .user-name small {
+                display: none;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .action-buttons .btn-secondary,
+            .action-buttons .btn-warning,
+            .action-buttons .btn-success {
+                width: 100%;
+                justify-content: center;
+            }
+            .input-realisasi {
+                width: 80px;
+                font-size: 12px;
+            }
+            select.sumber-data {
+                min-width: 100px;
+                font-size: 11px;
+            }
+            .btn-check {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .top-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .info-text {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR KIRI ===== -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="logo-pln.png" alt="Logo PLN" />
+            <h2>KPI <span>Dashboard</span></h2>
+        </div>
+
+        <div class="menu-section">Menu Utama</div>
+        <div class="menu-item" onclick="window.location.href='index.html'">
+            <i class="fas fa-th-large"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-chart-pie"></i>
+            <span>Info Grafis</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-tasks"></i>
+            <span>Master KPI</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-bullseye"></i>
+            <span>Target KPI</span>
+        </div>
+
+        <div class="menu-section" style="margin-top:8px;">Realisasi &amp; Monitoring</div>
+        <div class="menu-item active">
+            <i class="fas fa-check-circle"></i>
+            <span>Realisasi KPI</span>
+        </div>
+        <div class="sub-menu">
+            <div class="menu-item" style="font-weight:500;color:white;border-left-color:#4a9eff;">
+                <i class="fas fa-pen" style="color:#7cb8ff;"></i>
+                <span>Input Manual</span>
+            </div>
+            <div class="menu-item" onclick="window.location.href='import.html'">
+                <i class="fas fa-file-import"></i>
+                <span>Import Data</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-check-double"></i>
+                <span>Verifikasi KPI</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Rekap NKO</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Status KPI</span>
+            </div>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">Data Support</div>
+        <div class="menu-item">
+            <i class="fas fa-database"></i>
+            <span>Data Pendukung</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-link"></i>
+            <span>Integrasi Pendukung</span>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">System</div>
+        <div class="menu-item">
+            <i class="fas fa-users-cog"></i>
+            <span>User Management</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-cog"></i>
+            <span>Pengaturan</span>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+        <!-- TOP HEADER -->
+        <div class="top-header">
+            <div class="page-title">
+                <h1>Input Manual Realisasi KPI</h1>
+                <p>Input data realisasi KPI secara manual per indikator</p>
+            </div>
+            <div class="top-right">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge-dot"></span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">JD</div>
+                    <div class="user-name">
+                        Jerni Diana
+                        <small>Admin KPI</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb">
+            <i class="fas fa-home"></i>
+            <span>Realisasi KPI</span>
+            <span class="separator">›</span>
+            <span>Input Manual</span>
+        </div>
+
+        <!-- INFO BAR -->
+        <div class="info-bar">
+            <div class="info-item">
+                <span class="label">Area</span>
+                <span class="value area">Sulawesi Tengah</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-item">
+                <span class="label">Unit</span>
+                <span class="value">UP3 Palu</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-item">
+                <span class="label">Periode</span>
+                <span class="value">Juli 2026</span>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-list-ul" style="margin-right:8px;color:#4a7aa0;"></i> Input Data Realisasi KPI</h3>
+                <div class="table-actions">
+                    <span class="badge-count"><i class="fas fa-file-alt"></i> 5 Indikator</span>
+                </div>
+            </div>
+
+            <!-- LEGEND STATUS SKOR -->
+            <div class="legend-status" style="margin:0 16px 12px 16px;">
+                <span style="font-weight:600;color:#0b2a4a;font-size:12px;">Status Skor Akhir:</span>
+                <div class="legend-item">
+                    <span class="dot green"></span>
+                    ≥ 100 = Target tercapai / baik
+                </div>
+                <div class="legend-item">
+                    <span class="dot yellow"></span>
+                    80–99,99 = Mendekati target / perlu perhatian
+                </div>
+                <div class="legend-item">
+                    <span class="dot red"></span>
+                    &lt; 80 = Belum mencapai target / perlu tindakan
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:40px;">No</th>
+                            <th style="min-width:180px;">Indikator KPI</th>
+                            <th style="width:70px;">Satuan</th>
+                            <th style="width:55px;">Bobot</th>
+                            <th style="width:80px;">Target</th>
+                            <th style="width:130px;">Realisasi</th>
+                            <th style="width:110px;">Pencapaian (%)</th>
+                            <th style="width:110px;">Nilai KPI</th>
+                            <th style="width:140px;">Sumber Data</th>
+                            <th style="width:70px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kpiTableBody">
+                        <!-- Data akan di-generate oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- INFO TEXT -->
+        <div class="info-text">
+            <i class="fas fa-info-circle"></i>
+            <span><strong>Pencapaian dan Nilai KPI akan dihitung otomatis</strong> setelah Anda mengisi nilai Realisasi.</span>
+        </div>
+
+        <!-- CATATAN -->
+        <div class="catatan-area">
+            <label for="catatan"><i class="fas fa-pencil-alt" style="margin-right:8px;color:#4a7aa0;"></i> Catatan (opsional)</label>
+            <textarea id="catatan" placeholder="Tulis catatan jika diperlukan..."></textarea>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+            <button class="btn-secondary" onclick="window.location.href='index.html'">
+                <i class="fas fa-times"></i> Batal
+            </button>
+            <button class="btn-warning" onclick="saveDraft()">
+                <i class="fas fa-save"></i> Simpan Draft
+            </button>
+            <button class="btn-success" onclick="saveAndSubmit()">
+                <i class="fas fa-paper-plane"></i> Simpan & Kirim
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // ===== DATA KPI =====
+        const kpiData = [
+            { id: 1, indikator: 'Penjualan Tenaga Listrik', satuan: 'GWh', bobot: 14, target: 54.81 },
+            { id: 2, indikator: 'Susut Distribusi Tanpa E-min (sesuai kewenangan)', satuan: '%', bobot: 12, target: 10.63 },
+            { id: 3, indikator: 'SAIDI', satuan: 'Jam', bobot: 10, target: 10.49 },
+            { id: 4, indikator: 'SAIFI', satuan: 'Kali', bobot: 10, target: 7.19 },
+            { id: 5, indikator: 'Jumlah Pelanggan', satuan: 'Pelanggan', bobot: 10, target: 791638 }
+        ];
+
+        // ===== RENDER TABLE =====
+        function renderTable() {
+            const tbody = document.getElementById('kpiTableBody');
+            let html = '';
+
+            kpiData.forEach((item, index) => {
+                const rowId = `row-${item.id}`;
+                html += `
+                    <tr id="${rowId}">
+                        <td>${index + 1}</td>
+                        <td><strong>${item.indikator}</strong></td>
+                        <td>${item.satuan}</td>
+                        <td>${item.bobot}</td>
+                        <td>${formatNumber(item.target)}</td>
+                        <td>
+                            <input type="number" 
+                                   class="input-realisasi" 
+                                   id="realisasi-${item.id}"
+                                   data-id="${item.id}"
+                                   placeholder="Masukkan realisasi"
+                                   step="any"
+                                   oninput="calculateRow(${item.id})"
+                                   onfocus="this.select()" />
+                        </td>
+                        <td id="pencapaian-${item.id}">0,00</td>
+                        <td id="nilai-${item.id}">
+                            <span class="score-status grey">
+                                <span class="dot"></span> 0,00
+                            </span>
+                        </td>
+                        <td>
+                            <select class="sumber-data" id="sumber-${item.id}">
+                                <option value="">Pilih sumber</option>
+                                <option value="Sistem">Sistem</option>
+                                <option value="Manual">Manual</option>
+                                <option value="Excel">Excel</option>
+                                <option value="API">API</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn-check" id="check-${item.id}" onclick="toggleCheck(${item.id})">
+                                <i class="far fa-square"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        // ===== FORMAT NUMBER =====
+        function formatNumber(num) {
+            if (num >= 1000) {
+                return num.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+            return num.toFixed(2).replace('.', ',');
+        }
+
+        // ===== CALCULATE ROW =====
+        function calculateRow(id) {
+            const input = document.getElementById(`realisasi-${id}`);
+            const realisasi = parseFloat(input.value) || 0;
+
+            // Cari data KPI
+            const kpi = kpiData.find(k => k.id === id);
+            if (!kpi) return;
+
+            const target = kpi.target;
+            const bobot = kpi.bobot;
+
+            // Hitung pencapaian
+            let pencapaian = 0;
+            if (target > 0) {
+                pencapaian = (realisasi / target) * 100;
+            }
+
+            // Hitung nilai KPI (maksimal 100% dari bobot)
+            let nilaiKPI = 0;
+            if (target > 0) {
+                nilaiKPI = (realisasi / target) * bobot;
+                if (nilaiKPI > bobot) nilaiKPI = bobot;
+            }
+
+            // Update tampilan
+            document.getElementById(`pencapaian-${id}`).textContent = pencapaian.toFixed(2).replace('.', ',');
+
+            // Update status nilai
+            const nilaiElement = document.getElementById(`nilai-${id}`);
+            const status = getStatus(nilaiKPI);
+            nilaiElement.innerHTML = `
+                <span class="score-status ${status.class}">
+                    <span class="dot"></span> ${nilaiKPI.toFixed(2).replace('.', ',')}
+                </span>
+            `;
+
+            // Tandai input sudah diisi
+            const inputElement = document.getElementById(`realisasi-${id}`);
+            if (realisasi > 0) {
+                inputElement.classList.add('input-filled');
+            } else {
+                inputElement.classList.remove('input-filled');
+            }
+
+            // Update badge checked jika nilai > 0
+            const checkBtn = document.getElementById(`check-${id}`);
+            if (realisasi > 0) {
+                checkBtn.classList.add('checked');
+                checkBtn.innerHTML = '<i class="fas fa-check-square"></i>';
+            } else {
+                checkBtn.classList.remove('checked');
+                checkBtn.innerHTML = '<i class="far fa-square"></i>';
+            }
+        }
+
+        // ===== GET STATUS =====
+        function getStatus(nilai) {
+            if (nilai >= 100) return { label: 'Target Tercapai', class: 'green' };
+            if (nilai >= 80) return { label: 'Mendekati Target', class: 'yellow' };
+            if (nilai > 0) return { label: 'Perlu Tindakan', class: 'red' };
+            return { label: 'Belum diisi', class: 'grey' };
+        }
+
+        // ===== TOGGLE CHECK =====
+        function toggleCheck(id) {
+            const input = document.getElementById(`realisasi-${id}`);
+            const checkBtn = document.getElementById(`check-${id}`);
+
+            if (input.value && parseFloat(input.value) > 0) {
+                // Sudah terisi, toggle checked
+                if (checkBtn.classList.contains('checked')) {
+                    checkBtn.classList.remove('checked');
+                    checkBtn.innerHTML = '<i class="far fa-square"></i>';
+                } else {
+                    checkBtn.classList.add('checked');
+                    checkBtn.innerHTML = '<i class="fas fa-check-square"></i>';
+                }
+            } else {
+                alert('Silakan isi nilai realisasi terlebih dahulu.');
+            }
+        }
+
+        // ===== SAVE DRAFT =====
+        function saveDraft() {
+            const data = collectData();
+            if (data.length === 0) {
+                alert('Tidak ada data yang diisi. Silakan isi minimal satu nilai realisasi.');
+                return;
+            }
+            console.log('Draft saved:', data);
+            alert('✅ Draft berhasil disimpan! Data akan tersimpan sebagai draft.');
+        }
+
+        // ===== SAVE AND SUBMIT =====
+        function saveAndSubmit() {
+            const data = collectData();
+            if (data.length === 0) {
+                alert('⚠️ Tidak ada data yang diisi. Silakan isi minimal satu nilai realisasi.');
+                return;
+            }
+
+            // Validasi: cek apakah semua input sudah terisi
+            const emptyInputs = data.filter(d => d.realisasi === 0);
+            if (emptyInputs.length > 0) {
+                const names = emptyInputs.map(d => d.indikator).join('\n- ');
+                if (!confirm(`⚠️ Beberapa indikator masih kosong:\n- ${names}\n\nApakah Anda yakin ingin menyimpan?`)) {
+                    return;
+                }
+            }
+
+            const catatan = document.getElementById('catatan').value;
+
+            // Hitung total
+            const totalNilai = data.reduce((sum, d) => sum + d.nilaiKPI, 0);
+            const rataRata = data.length > 0 ? totalNilai / data.length : 0;
+
+            // Tampilkan ringkasan
+            const confirmMsg = `
+        📊 RINGKASAN DATA
+        ────────────────────
+        Total Indikator: ${data.length}
+        Total Nilai KPI: ${totalNilai.toFixed(2)}
+        Rata-rata Nilai: ${rataRata.toFixed(2)}
+        ────────────────────
+        Catatan: ${catatan || '(tidak ada)'}
+        
+        Apakah Anda yakin ingin mengirim data ini?
+        `;
+
+            if (confirm(confirmMsg)) {
+                console.log('Data submitted:', { data, catatan });
+                alert('✅ Data berhasil dikirim! Menunggu verifikasi.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // ===== COLLECT DATA =====
+        function collectData() {
+            const result = [];
+            kpiData.forEach(kpi => {
+                const input = document.getElementById(`realisasi-${kpi.id}`);
+                const realisasi = parseFloat(input.value) || 0;
+                if (realisasi > 0) {
+                    const target = kpi.target;
+                    const bobot = kpi.bobot;
+                    const pencapaian = target > 0 ? (realisasi / target) * 100 : 0;
+                    const nilaiKPI = target > 0 ? Math.min((realisasi / target) * bobot, bobot) : 0;
+                    const sumber = document.getElementById(`sumber-${kpi.id}`).value;
+                    const checked = document.getElementById(`check-${kpi.id}`).classList.contains('checked');
+
+                    result.push({
+                        id: kpi.id,
+                        indikator: kpi.indikator,
+                        satuan: kpi.satuan,
+                        bobot: bobot,
+                        target: target,
+                        realisasi: realisasi,
+                        pencapaian: pencapaian,
+                        nilaiKPI: nilaiKPI,
+                        sumber: sumber || '-',
+                        checked: checked
+                    });
+                }
+            });
+            return result;
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+
+            // Auto-calculate jika ada nilai default (contoh untuk demo)
+            // Bisa diisi dengan data contoh jika diperlukan
+        });
+    </script>
+
+</body>
+</html>
