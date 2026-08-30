@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi KPI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f7;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #0b2a4a;
+            color: #e0e9f5;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #2a5a7a;
+            border-radius: 10px;
+        }
+
+        .sidebar-brand {
+            padding: 0 20px 18px 20px;
+            border-bottom: 1px solid #1a3d5e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .sidebar-brand h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.3px;
+        }
+
+        .sidebar-brand h2 span {
+            font-weight: 300;
+            color: #8ab3d6;
+        }
+
+        .menu-section {
+            padding: 16px 20px 6px 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #6e92b5;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            padding: 10px 20px 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13.5px;
+            color: #b6cde0;
+            cursor: pointer;
+            transition: 0.15s;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: #143a5a;
+            color: white;
+        }
+
+        .menu-item.active {
+            background: #143a5a;
+            color: white;
+            border-left-color: #4a9eff;
+        }
+
+        .menu-item i {
+            width: 20px;
+            font-size: 15px;
+            color: #6a92b8;
+        }
+
+        .menu-item.active i {
+            color: #7cb8ff;
+        }
+
+        .sub-menu {
+            padding-left: 20px;
+        }
+
+        .sub-menu .menu-item {
+            font-size: 12.5px;
+            padding: 6px 20px 6px 20px;
+            border-left: 3px solid transparent;
+        }
+
+        .sub-menu .menu-item i {
+            font-size: 11px;
+            width: 18px;
+        }
+
+        .sub-menu .menu-item.active-sub {
+            background: #143a5a;
+            color: white;
+            border-left-color: #4a9eff;
+        }
+
+        .sub-menu .menu-item.active-sub i {
+            color: #7cb8ff;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: #1a3d5e;
+            margin: 8px 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 24px 32px 40px 32px;
+            background: #f0f2f7;
+            overflow-x: auto;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0b2a4a;
+        }
+
+        .page-title p {
+            color: #5a7290;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 4px 16px 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dcee;
+        }
+
+        .user-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #0b2a4a;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-profile .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #0b2a4a;
+        }
+
+        .user-profile .user-name small {
+            font-weight: 400;
+            color: #6a85a5;
+            font-size: 11px;
+            display: block;
+            margin-top: -2px;
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            color: #4a6a8a;
+            cursor: pointer;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d0dcee;
+            transition: 0.2s;
+        }
+
+        .notification-icon:hover {
+            background: #f0f5fe;
+            border-color: #4a9eff;
+        }
+
+        .notification-icon .badge-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #5a7290;
+            margin: 12px 0 18px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e6edf6;
+        }
+
+        .breadcrumb i {
+            margin-right: 6px;
+            color: #7e94b0;
+        }
+        .breadcrumb span {
+            color: #0b2a4a;
+            font-weight: 500;
+        }
+        .breadcrumb .separator {
+            margin: 0 6px;
+            color: #b0c4db;
+        }
+
+        .info-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 40px;
+            margin: 18px 0 22px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e6edf6;
+        }
+
+        .info-bar .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #1a3452;
+        }
+
+        .info-bar .info-item .label {
+            color: #6a85a5;
+            font-weight: 400;
+        }
+
+        .info-bar .info-item .value {
+            font-weight: 600;
+            background: #f0f5fe;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+        }
+
+        .info-bar .info-item .value.area {
+            background: #0b2a4a;
+            color: white;
+            padding: 4px 16px;
+        }
+
+        .info-bar .info-divider {
+            width: 1px;
+            background: #dde6f2;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid #e6edf6;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            align-items: center;
+        }
+
+        .filter-section .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-section .filter-group label {
+            font-size: 12px;
+            color: #5a7290;
+            font-weight: 500;
+        }
+
+        .filter-section .filter-group select,
+        .filter-section .filter-group input {
+            padding: 6px 12px;
+            border: 1px solid #d0dcee;
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+            background: #fafcff;
+            transition: 0.2s;
+        }
+
+        .filter-section .filter-group select:focus,
+        .filter-section .filter-group input:focus {
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+        }
+
+        .btn-filter {
+            background: #0b2a4a;
+            color: white;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-filter:hover {
+            background: #1a3d5e;
+        }
+
+        .btn-reset {
+            background: #eef3f9;
+            color: #1a3452;
+            border: 1px solid #d0dcee;
+            padding: 6px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #dde6f2;
+        }
+
+        .btn-bulk-verify {
+            background: linear-gradient(135deg, #0f7b3e, #0f8a4a);
+            color: white;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(15, 123, 62, 0.3);
+        }
+
+        .btn-bulk-verify:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(15, 123, 62, 0.4);
+        }
+
+        .stats-grid-verifikasi {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card-verifikasi {
+            background: white;
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e6edf6;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card-verifikasi:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .stat-card-verifikasi .stat-icon {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            font-size: 28px;
+            opacity: 0.12;
+        }
+
+        .stat-card-verifikasi .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0b2a4a;
+            line-height: 1.2;
+        }
+
+        .stat-card-verifikasi .stat-label {
+            font-size: 13px;
+            color: #6a85a5;
+            margin-top: 2px;
+        }
+
+        .stat-card-verifikasi .stat-detail {
+            font-size: 12px;
+            color: #5a7290;
+            margin-top: 4px;
+        }
+
+        .stat-card-verifikasi .stat-detail .green {
+            color: #0f7b3e;
+        }
+        .stat-card-verifikasi .stat-detail .yellow {
+            color: #b87a1a;
+        }
+        .stat-card-verifikasi .stat-detail .red {
+            color: #b33a3a;
+        }
+
+        .stat-card-verifikasi.verified {
+            border-color: #0f7b3e;
+            background: #f0f9f4;
+        }
+
+        .stat-card-verifikasi.verified .stat-number {
+            color: #0f7b3e;
+        }
+
+        .stat-card-verifikasi.pending {
+            border-color: #f1c40f;
+            background: #fef9e6;
+        }
+
+        .stat-card-verifikasi.pending .stat-number {
+            color: #b87a1a;
+        }
+
+        .stat-card-verifikasi.rejected {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .stat-card-verifikasi.rejected .stat-number {
+            color: #b33a3a;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #e6edf6;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .table-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e6edf6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+
+        .table-header h3 i {
+            color: #4a7aa0;
+            margin-right: 8px;
+        }
+
+        .table-header .table-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .table-header .table-actions .badge-count {
+            background: #eef3f9;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #1a3452;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 1100px;
+        }
+
+        thead {
+            background: #f5f8fd;
+        }
+
+        th {
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a3452;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid #e0e8f2;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eef3f9;
+            color: #1a3452;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #f8faff;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-badge.verified {
+            background: #e6f7ed;
+            color: #0f7b3e;
+        }
+
+        .status-badge.verified i {
+            color: #0f7b3e;
+        }
+
+        .status-badge.draft {
+            background: #fef6e6;
+            color: #b87a1a;
+        }
+
+        .status-badge.draft i {
+            color: #b87a1a;
+        }
+
+        .status-badge.pending {
+            background: #f0f2f7;
+            color: #5a7290;
+        }
+
+        .status-badge.pending i {
+            color: #5a7290;
+        }
+
+        .status-badge.rejected {
+            background: #fde8e8;
+            color: #b33a3a;
+        }
+
+        .status-badge.rejected i {
+            color: #b33a3a;
+        }
+
+        .score-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 10px 2px 6px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .score-status .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .score-status.green {
+            background: #e6f7ed;
+            color: #0f7b3e;
+        }
+        .score-status.green .dot {
+            background: #0f7b3e;
+        }
+
+        .score-status.yellow {
+            background: #fef9e6;
+            color: #b87a1a;
+        }
+        .score-status.yellow .dot {
+            background: #f1c40f;
+        }
+
+        .score-status.red {
+            background: #fde8e8;
+            color: #b33a3a;
+        }
+        .score-status.red .dot {
+            background: #e74c3c;
+        }
+
+        .btn-verifikasi {
+            background: #0f7b3e;
+            color: white;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin: 2px;
+            transition: 0.2s;
+        }
+
+        .btn-verifikasi:hover {
+            background: #0f8a4a;
+            transform: translateY(-1px);
+        }
+
+        .btn-tolak {
+            background: #b33a3a;
+            color: white;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin: 2px;
+            transition: 0.2s;
+        }
+
+        .btn-tolak:hover {
+            background: #c94444;
+            transform: translateY(-1px);
+        }
+
+        .action-link {
+            color: #4a7aa0;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0 4px;
+            transition: 0.2s;
+        }
+
+        .action-link:hover {
+            color: #0b2a4a;
+        }
+
+        .table-footer {
+            padding: 12px 20px;
+            border-top: 1px solid #e6edf6;
+            font-size: 12px;
+            color: #5a7290;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .table-footer .pagination {
+            display: flex;
+            gap: 4px;
+        }
+
+        .table-footer .pagination span {
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .table-footer .pagination span.active {
+            background: #0b2a4a;
+            color: white;
+        }
+
+        .table-footer .pagination span:hover:not(.active) {
+            background: #eef3f9;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #0b2a4a;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid-verifikasi {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-section .filter-group {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 12px 0;
+            }
+            .sidebar-brand h2,
+            .menu-item span,
+            .menu-section,
+            .menu-item .badge,
+            .sub-menu {
+                display: none;
+            }
+            .sidebar-brand {
+                padding: 0 12px 12px 12px;
+                justify-content: center;
+            }
+            .sidebar-brand img {
+                height: 30px;
+            }
+            .menu-item {
+                padding: 12px 18px;
+                justify-content: center;
+            }
+            .menu-item i {
+                font-size: 18px;
+                width: auto;
+            }
+            .main-content {
+                padding: 16px;
+            }
+            .stats-grid-verifikasi {
+                grid-template-columns: 1fr 1fr;
+            }
+            .info-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .info-bar .info-divider {
+                display: none;
+            }
+            .top-right .user-profile .user-name small {
+                display: none;
+            }
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .table-header .table-actions {
+                flex-wrap: wrap;
+            }
+            .top-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .top-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid-verifikasi {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        // ===== NAVIGATION FUNCTIONS =====
+        function goToDashboard() {
+            window.location.href = 'index.html';
+        }
+
+        function goToImport() {
+            window.location.href = 'import.html';
+        }
+
+        function goToManual() {
+            window.location.href = 'manual.html';
+        }
+
+        function goToVerifikasi() {
+            window.location.href = 'verifikasi.html';
+        }
+
+        function goToRekapNKO() {
+            window.location.href = 'rekapnko.html';
+        }
+
+        function goToStatusKPI() {
+            window.location.href = 'statuskpi.html';
+        }
+
+        // ===== VERIFIKASI FUNCTIONS =====
+        function verifikasiData(id, indikator) {
+            Swal.fire({
+                title: 'Verifikasi Data',
+                text: `Apakah Anda yakin ingin memverifikasi data "${indikator}"?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#0f7b3e',
+                cancelButtonColor: '#b33a3a',
+                confirmButtonText: '<i class="fas fa-check"></i> Ya, Verifikasi',
+                cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                reverseButtons: true,
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            const row = document.getElementById('row-' + id);
+                            const statusCell = row.querySelector('.status-cell');
+                            const actionCell = row.querySelector('.action-cell');
+
+                            statusCell.innerHTML = `
+                                <span class="status-badge verified">
+                                    <i class="fas fa-check-circle"></i> Terverifikasi
+                                </span>
+                            `;
+                            actionCell.innerHTML = `
+                                <span class="action-link" title="Detail" onclick="detailData(${id})">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            `;
+                            updateStats();
+                            resolve();
+                        }, 1000);
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: `Data "${indikator}" berhasil diverifikasi.`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        function tolakData(id, indikator) {
+            Swal.fire({
+                title: 'Tolak Data',
+                text: `Masukkan alasan penolakan untuk data "${indikator}":`,
+                icon: 'warning',
+                input: 'textarea',
+                inputPlaceholder: 'Tulis alasan penolakan...',
+                showCancelButton: true,
+                confirmButtonColor: '#b33a3a',
+                cancelButtonColor: '#5a7290',
+                confirmButtonText: '<i class="fas fa-times"></i> Tolak',
+                cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Alasan penolakan harus diisi!';
+                    }
+                },
+                showLoaderOnConfirm: true,
+                preConfirm: (alasan) => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            const row = document.getElementById('row-' + id);
+                            const statusCell = row.querySelector('.status-cell');
+                            const actionCell = row.querySelector('.action-cell');
+
+                            statusCell.innerHTML = `
+                                <span class="status-badge rejected">
+                                    <i class="fas fa-times-circle"></i> Ditolak
+                                </span>
+                            `;
+                            actionCell.innerHTML = `
+                                <span class="action-link" title="Detail" onclick="detailData(${id})">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                                <span class="action-link" title="Alasan" onclick="lihatAlasan('${alasan}')">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            `;
+                            updateStats();
+                            resolve(alasan);
+                        }, 1000);
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Ditolak!',
+                        text: `Data "${indikator}" berhasil ditolak.`,
+                        icon: 'error',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        function lihatAlasan(alasan) {
+            Swal.fire({
+                title: 'Alasan Penolakan',
+                text: alasan,
+                icon: 'info',
+                confirmButtonColor: '#0b2a4a',
+                confirmButtonText: '<i class="fas fa-check"></i> Tutup'
+            });
+        }
+
+        function detailData(id) {
+            Swal.fire({
+                title: 'Detail Data',
+                html: `
+                    <div style="text-align:left;font-size:14px;">
+                        <p><strong>Indikator:</strong> ${getIndikatorById(id)}</p>
+                        <p><strong>Target:</strong> ${getTargetById(id)}</p>
+                        <p><strong>Realisasi:</strong> ${getRealisasiById(id)}</p>
+                        <p><strong>Pencapaian:</strong> ${getPencapaianById(id)}</p>
+                        <p><strong>Nilai KPI:</strong> ${getNilaiById(id)}</p>
+                        <p><strong>Status:</strong> ${getStatusVerifikasiById(id)}</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonColor: '#0b2a4a',
+                confirmButtonText: '<i class="fas fa-check"></i> Tutup'
+            });
+        }
+
+        // ===== HELPER FUNCTIONS =====
+        function getIndikatorById(id) {
+            const row = document.getElementById('row-' + id);
+            return row.querySelector('.indikator-cell').textContent;
+        }
+
+        function getTargetById(id) {
+            const row = document.getElementById('row-' + id);
+            return row.querySelectorAll('td')[4].textContent;
+        }
+
+        function getRealisasiById(id) {
+            const row = document.getElementById('row-' + id);
+            return row.querySelectorAll('td')[5].textContent;
+        }
+
+        function getPencapaianById(id) {
+            const row = document.getElementById('row-' + id);
+            return row.querySelectorAll('td')[6].textContent;
+        }
+
+        function getNilaiById(id) {
+            const row = document.getElementById('row-' + id);
+            return row.querySelectorAll('td')[7].textContent;
+        }
+
+        function getStatusVerifikasiById(id) {
+            const row = document.getElementById('row-' + id);
+            return row.querySelector('.status-cell').textContent.trim();
+        }
+
+        // ===== UPDATE STATS =====
+        function updateStats() {
+            const rows = document.querySelectorAll('#verifikasiTableBody tr:not(.total-row)');
+            let total = rows.length;
+            let verified = 0,
+                pending = 0,
+                rejected = 0;
+
+            rows.forEach(row => {
+                const statusText = row.querySelector('.status-cell').textContent.trim();
+                if (statusText.includes('Terverifikasi')) verified++;
+                else if (statusText.includes('Ditolak')) rejected++;
+                else pending++;
+            });
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statVerified').textContent = verified;
+            document.getElementById('statPending').textContent = pending;
+            document.getElementById('statRejected').textContent = rejected;
+        }
+
+        // ===== FILTER =====
+        function filterData() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#verifikasiTableBody tr:not(.total-row)');
+
+            rows.forEach(row => {
+                const statusText = row.querySelector('.status-cell').textContent.trim();
+                const indikator = row.querySelector('.indikator-cell').textContent.toLowerCase();
+                let show = true;
+
+                if (statusFilter && statusFilter !== 'semua') {
+                    if (statusFilter === 'verified' && !statusText.includes('Terverifikasi')) show = false;
+                    if (statusFilter === 'pending' && !statusText.includes('Menunggu')) show = false;
+                    if (statusFilter === 'rejected' && !statusText.includes('Ditolak')) show = false;
+                }
+
+                if (searchText && !indikator.includes(searchText)) show = false;
+
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        function resetFilter() {
+            document.getElementById('filterStatus').value = 'semua';
+            document.getElementById('searchInput').value = '';
+            filterData();
+        }
+
+        // ===== BULK VERIFY =====
+        function bulkVerify() {
+            const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+            if (checkboxes.length === 0) {
+                Swal.fire({
+                    title: 'Peringatan',
+                    text: 'Silakan pilih minimal satu data untuk diverifikasi.',
+                    icon: 'warning',
+                    confirmButtonColor: '#b87a1a',
+                    confirmButtonText: '<i class="fas fa-check"></i> OK'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Verifikasi Massal',
+                text: `Apakah Anda yakin ingin memverifikasi ${checkboxes.length} data terpilih?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#0f7b3e',
+                cancelButtonColor: '#b33a3a',
+                confirmButtonText: '<i class="fas fa-check"></i> Ya, Verifikasi Semua',
+                cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            checkboxes.forEach(cb => {
+                                const id = cb.dataset.id;
+                                const row = document.getElementById('row-' + id);
+                                const statusCell = row.querySelector('.status-cell');
+                                const actionCell = row.querySelector('.action-cell');
+
+                                statusCell.innerHTML = `
+                                    <span class="status-badge verified">
+                                        <i class="fas fa-check-circle"></i> Terverifikasi
+                                    </span>
+                                `;
+                                actionCell.innerHTML = `
+                                    <span class="action-link" title="Detail" onclick="detailData(${id})">
+                                        <i class="fas fa-eye"></i>
+                                    </span>
+                                `;
+                                cb.checked = false;
+                            });
+                            updateStats();
+                            resolve();
+                        }, 1500);
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: `${checkboxes.length} data berhasil diverifikasi.`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        }
+
+        // ===== SELECT ALL =====
+        function toggleSelectAll() {
+            const checkAll = document.getElementById('checkAll');
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checkAll.checked;
+            });
+        }
+
+        // ===== ON LOAD =====
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="logo-pln.png" alt="Logo PLN" />
+            <h2>KPI <span>Dashboard</span></h2>
+        </div>
+
+        <div class="menu-section">Menu Utama</div>
+        <div class="menu-item" onclick="goToDashboard()">
+            <i class="fas fa-th-large"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-chart-pie"></i>
+            <span>Info Grafis</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-tasks"></i>
+            <span>Master KPI</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-bullseye"></i>
+            <span>Target KPI</span>
+        </div>
+
+        <div class="menu-section" style="margin-top:8px;">Realisasi &amp; Monitoring</div>
+        <div class="menu-item active">
+            <i class="fas fa-check-circle"></i>
+            <span>Realisasi KPI</span>
+        </div>
+        <div class="sub-menu">
+            <div class="menu-item" onclick="goToManual()">
+                <i class="fas fa-pen"></i>
+                <span>Input Manual</span>
+            </div>
+            <div class="menu-item" onclick="goToImport()">
+                <i class="fas fa-file-import"></i>
+                <span>Import Data</span>
+            </div>
+            <div class="menu-item active-sub" onclick="goToVerifikasi()">
+                <i class="fas fa-check-double" style="color:#7cb8ff;"></i>
+                <span>Verifikasi KPI</span>
+            </div>
+            <div class="menu-item" onclick="goToRekapNKO()">
+                <i class="fas fa-file-alt"></i>
+                <span>Rekap NKO</span>
+            </div>
+            <div class="menu-item" onclick="goToStatusKPI()">
+                <i class="fas fa-chart-line"></i>
+                <span>Status KPI</span>
+            </div>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">Data Support</div>
+        <div class="menu-item">
+            <i class="fas fa-database"></i>
+            <span>Data Pendukung</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-link"></i>
+            <span>Integrasi Pendukung</span>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">System</div>
+        <div class="menu-item">
+            <i class="fas fa-users-cog"></i>
+            <span>User Management</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-cog"></i>
+            <span>Pengaturan</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="top-header">
+            <div class="page-title">
+                <h1>Verifikasi KPI</h1>
+                <p>Verifikasi data realisasi KPI sebelum disetujui</p>
+            </div>
+            <div class="top-right">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge-dot"></span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">JD</div>
+                    <div class="user-name">
+                        Jerni Diana
+                        <small>Admin KPI</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="breadcrumb">
+            <i class="fas fa-home"></i>
+            <span>Realisasi KPI</span>
+            <span class="separator">›</span>
+            <span>Verifikasi KPI</span>
+        </div>
+
+        <div class="info-bar">
+            <div class="info-item">
+                <span class="label">Area</span>
+                <span class="value area">Sulawesi, Maluku, Papua, Nusa Tenggara</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-item">
+                <span class="label">Unit</span>
+                <span class="value">UP3 Palu</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-item">
+                <span class="label">Periode</span>
+                <span class="value">Juli 2026</span>
+            </div>
+        </div>
+
+        <div class="stats-grid-verifikasi">
+            <div class="stat-card-verifikasi">
+                <div class="stat-icon"><i class="fas fa-database"></i></div>
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">Total Data</div>
+            </div>
+            <div class="stat-card-verifikasi verified">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number" id="statVerified">0</div>
+                <div class="stat-label"><i class="fas fa-check-circle" style="color:#0f7b3e;"></i> Terverifikasi</div>
+                <div class="stat-detail"><span class="green">●</span> Data sudah valid</div>
+            </div>
+            <div class="stat-card-verifikasi pending">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number" id="statPending">0</div>
+                <div class="stat-label"><i class="fas fa-clock" style="color:#b87a1a;"></i> Menunggu Verifikasi</div>
+                <div class="stat-detail"><span class="yellow">●</span> Perlu pengecekan</div>
+            </div>
+            <div class="stat-card-verifikasi rejected">
+                <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                <div class="stat-number" id="statRejected">0</div>
+                <div class="stat-label"><i class="fas fa-times-circle" style="color:#b33a3a;"></i> Ditolak</div>
+                <div class="stat-detail"><span class="red">●</span> Perlu revisi</div>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Status:</label>
+                <select id="filterStatus" onchange="filterData()">
+                    <option value="semua">Semua</option>
+                    <option value="verified">Terverifikasi</option>
+                    <option value="pending">Menunggu Verifikasi</option>
+                    <option value="rejected">Ditolak</option>
+                </select>
+            </div>
+            <div class="filter-group" style="flex:1;">
+                <label>Cari:</label>
+                <input type="text" id="searchInput" placeholder="Cari indikator..." oninput="filterData()" style="flex:1;min-width:150px;" />
+            </div>
+            <button class="btn-reset" onclick="resetFilter()">Reset</button>
+            <button class="btn-bulk-verify" onclick="bulkVerify()">
+                <i class="fas fa-check-double"></i> Verifikasi Massal
+            </button>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-list-ul"></i> Daftar Verifikasi KPI</h3>
+                <div class="table-actions">
+                    <span class="badge-count"><i class="fas fa-file-alt"></i> 15 Data</span>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:30px;">
+                                <input type="checkbox" id="checkAll" onchange="toggleSelectAll()" />
+                            </th>
+                            <th style="width:35px;">No</th>
+                            <th>Indikator KPI</th>
+                            <th style="width:70px;">Satuan</th>
+                            <th style="width:55px;">Bobot</th>
+                            <th style="width:75px;">Target</th>
+                            <th style="width:85px;">Realisasi</th>
+                            <th style="width:90px;">Nilai KPI</th>
+                            <th style="width:100px;">Status Skor</th>
+                            <th style="width:135px;">Status Verifikasi</th>
+                            <th style="width:180px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="verifikasiTableBody">
+                        <tr id="row-1">
+                            <td><input type="checkbox" class="row-checkbox" data-id="1" /></td>
+                            <td>1</td>
+                            <td class="indikator-cell">Penjualan Tenaga Listrik</td>
+                            <td>GWh</td>
+                            <td>14</td>
+                            <td>54,81</td>
+                            <td>50,32</td>
+                            <td>12,85</td>
+                            <td><span class="score-status green"><span class="dot"></span> 12,85</span></td>
+                            <td class="status-cell"><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td class="action-cell">
+                                <span class="action-link" title="Detail" onclick="detailData(1)"><i class="fas fa-eye"></i></span>
+                            </td>
+                        </tr>
+                        <tr id="row-2">
+                            <td><input type="checkbox" class="row-checkbox" data-id="2" /></td>
+                            <td>2</td>
+                            <td class="indikator-cell">Susut Distribusi Tanpa E-min</td>
+                            <td>%</td>
+                            <td>12</td>
+                            <td>10,63</td>
+                            <td>9,78</td>
+                            <td>11,04</td>
+                            <td><span class="score-status green"><span class="dot"></span> 11,04</span></td>
+                            <td class="status-cell"><span class="status-badge pending"><i class="fas fa-clock"></i> Menunggu Verifikasi</span></td>
+                            <td class="action-cell">
+                                <button class="btn-verifikasi" onclick="verifikasiData(2, 'Susut Distribusi Tanpa E-min')"><i class="fas fa-check"></i> Verifikasi</button>
+                                <button class="btn-tolak" onclick="tolakData(2, 'Susut Distribusi Tanpa E-min')"><i class="fas fa-times"></i> Tolak</button>
+                            </td>
+                        </tr>
+                        <tr id="row-3">
+                            <td><input type="checkbox" class="row-checkbox" data-id="3" /></td>
+                            <td>3</td>
+                            <td class="indikator-cell">SAIDI</td>
+                            <td>Jam</td>
+                            <td>10</td>
+                            <td>10,49</td>
+                            <td>8,21</td>
+                            <td>10,00</td>
+                            <td><span class="score-status green"><span class="dot"></span> 10,00</span></td>
+                            <td class="status-cell"><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td class="action-cell">
+                                <span class="action-link" title="Detail" onclick="detailData(3)"><i class="fas fa-eye"></i></span>
+                            </td>
+                        </tr>
+                        <tr id="row-4">
+                            <td><input type="checkbox" class="row-checkbox" data-id="4" /></td>
+                            <td>4</td>
+                            <td class="indikator-cell">SAIFI</td>
+                            <td>Kali</td>
+                            <td>10</td>
+                            <td>7,19</td>
+                            <td>6,80</td>
+                            <td>10,00</td>
+                            <td><span class="score-status green"><span class="dot"></span> 10,00</span></td>
+                            <td class="status-cell"><span class="status-badge pending"><i class="fas fa-clock"></i> Menunggu Verifikasi</span></td>
+                            <td class="action-cell">
+                                <button class="btn-verifikasi" onclick="verifikasiData(4, 'SAIFI')"><i class="fas fa-check"></i> Verifikasi</button>
+                                <button class="btn-tolak" onclick="tolakData(4, 'SAIFI')"><i class="fas fa-times"></i> Tolak</button>
+                            </td>
+                        </tr>
+                        <tr id="row-5">
+                            <td><input type="checkbox" class="row-checkbox" data-id="5" /></td>
+                            <td>5</td>
+                            <td class="indikator-cell">Jumlah Pelanggan</td>
+                            <td>Pelanggan</td>
+                            <td>10</td>
+                            <td>791.638</td>
+                            <td>781.254</td>
+                            <td>9,87</td>
+                            <td><span class="score-status yellow"><span class="dot"></span> 9,87</span></td>
+                            <td class="status-cell"><span class="status-badge rejected"><i class="fas fa-times-circle"></i> Ditolak</span></td>
+                            <td class="action-cell">
+                                <span class="action-link" title="Detail" onclick="detailData(5)"><i class="fas fa-eye"></i></span>
+                                <span class="action-link" title="Alasan" onclick="lihatAlasan('Data tidak sesuai dengan dokumen pendukung.')">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="row-6">
+                            <td><input type="checkbox" class="row-checkbox" data-id="6" /></td>
+                            <td>6</td>
+                            <td class="indikator-cell">Rasio Pelanggan/Transformer</td>
+                            <td>%</td>
+                            <td>8</td>
+                            <td>85,00</td>
+                            <td>82,50</td>
+                            <td>7,76</td>
+                            <td><span class="score-status yellow"><span class="dot"></span> 7,76</span></td>
+                            <td class="status-cell"><span class="status-badge pending"><i class="fas fa-clock"></i> Menunggu Verifikasi</span></td>
+                            <td class="action-cell">
+                                <button class="btn-verifikasi" onclick="verifikasiData(6, 'Rasio Pelanggan/Transformer')"><i class="fas fa-check"></i> Verifikasi</button>
+                                <button class="btn-tolak" onclick="tolakData(6, 'Rasio Pelanggan/Transformer')"><i class="fas fa-times"></i> Tolak</button>
+                            </td>
+                        </tr>
+                        <tr id="row-7">
+                            <td><input type="checkbox" class="row-checkbox" data-id="7" /></td>
+                            <td>7</td>
+                            <td class="indikator-cell">Efisiensi Distribusi</td>
+                            <td>%</td>
+                            <td>8</td>
+                            <td>92,50</td>
+                            <td>91,20</td>
+                            <td>7,89</td>
+                            <td><span class="score-status yellow"><span class="dot"></span> 7,89</span></td>
+                            <td class="status-cell"><span class="status-badge rejected"><i class="fas fa-times-circle"></i> Ditolak</span></td>
+                            <td class="action-cell">
+                                <span class="action-link" title="Detail" onclick="detailData(7)"><i class="fas fa-eye"></i></span>
+                                <span class="action-link" title="Alasan" onclick="lihatAlasan('Perhitungan tidak sesuai dengan formula yang ditentukan.')">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="row-8">
+                            <td><input type="checkbox" class="row-checkbox" data-id="8" /></td>
+                            <td>8</td>
+                            <td class="indikator-cell">Kualitas Pelayanan</td>
+                            <td>%</td>
+                            <td>6</td>
+                            <td>95,00</td>
+                            <td>93,75</td>
+                            <td>5,92</td>
+                            <td><span class="score-status yellow"><span class="dot"></span> 5,92</span></td>
+                            <td class="status-cell"><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td class="action-cell">
+                                <span class="action-link" title="Detail" onclick="detailData(8)"><i class="fas fa-eye"></i></span>
+                            </td>
+                        </tr>
+                        <tr id="row-9">
+                            <td><input type="checkbox" class="row-checkbox" data-id="9" /></td>
+                            <td>9</td>
+                            <td class="indikator-cell">Penyerapan Anggaran</td>
+                            <td>%</td>
+                            <td>6</td>
+                            <td>90,00</td>
+                            <td>87,50</td>
+                            <td>5,83</td>
+                            <td><span class="score-status yellow"><span class="dot"></span> 5,83</span></td>
+                            <td class="status-cell"><span class="status-badge pending"><i class="fas fa-clock"></i> Menunggu Verifikasi</span></td>
+                            <td class="action-cell">
+                                <button class="btn-verifikasi" onclick="verifikasiData(9, 'Penyerapan Anggaran')"><i class="fas fa-check"></i> Verifikasi</button>
+                                <button class="btn-tolak" onclick="tolakData(9, 'Penyerapan Anggaran')"><i class="fas fa-times"></i> Tolak</button>
+                            </td>
+                        </tr>
+                        <tr id="row-10">
+                            <td><input type="checkbox" class="row-checkbox" data-id="10" /></td>
+                            <td>10</td>
+                            <td class="indikator-cell">Kepuasan Pelanggan</td>
+                            <td>%</td>
+                            <td>4</td>
+                            <td>88,00</td>
+                            <td>85,20</td>
+                            <td>3,87</td>
+                            <td><span class="score-status yellow"><span class="dot"></span> 3,87</span></td>
+                            <td class="status-cell"><span class="status-badge rejected"><i class="fas fa-times-circle"></i> Ditolak</span></td>
+                            <td class="action-cell">
+                                <span class="action-link" title="Detail" onclick="detailData(10)"><i class="fas fa-eye"></i></span>
+                                <span class="action-link" title="Alasan" onclick="lihatAlasan('Data survei tidak lengkap.')">
+                                    <i class="fas fa-info-circle"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <span>Menampilkan 1 - 10 dari 15 data</span>
+                <div class="pagination">
+                    <span><i class="fas fa-chevron-left"></i></span>
+                    <span class="active">1</span>
+                    <span>2</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

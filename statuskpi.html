@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status KPI - Monitoring Realisasi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f7;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #0b2a4a;
+            color: #e0e9f5;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #2a5a7a;
+            border-radius: 10px;
+        }
+
+        .sidebar-brand {
+            padding: 0 20px 18px 20px;
+            border-bottom: 1px solid #1a3d5e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-brand img {
+            height: 40px;
+            width: auto;
+        }
+
+        .sidebar-brand h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.3px;
+        }
+
+        .sidebar-brand h2 span {
+            font-weight: 300;
+            color: #8ab3d6;
+        }
+
+        .menu-section {
+            padding: 16px 20px 6px 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #6e92b5;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            padding: 10px 20px 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13.5px;
+            color: #b6cde0;
+            cursor: pointer;
+            transition: 0.15s;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: #143a5a;
+            color: white;
+        }
+
+        .menu-item.active {
+            background: #143a5a;
+            color: white;
+            border-left-color: #4a9eff;
+        }
+
+        .menu-item i {
+            width: 20px;
+            font-size: 15px;
+            color: #6a92b8;
+        }
+
+        .menu-item.active i {
+            color: #7cb8ff;
+        }
+
+        .sub-menu {
+            padding-left: 20px;
+        }
+
+        .sub-menu .menu-item {
+            font-size: 12.5px;
+            padding: 6px 20px 6px 20px;
+            border-left: 3px solid transparent;
+        }
+
+        .sub-menu .menu-item i {
+            font-size: 11px;
+            width: 18px;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: #1a3d5e;
+            margin: 8px 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 24px 32px 40px 32px;
+            background: #f0f2f7;
+            overflow-x: auto;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0b2a4a;
+        }
+
+        .page-title p {
+            color: #5a7290;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 4px 16px 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dcee;
+        }
+
+        .user-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #0b2a4a;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-profile .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #0b2a4a;
+        }
+
+        .user-profile .user-name small {
+            font-weight: 400;
+            color: #6a85a5;
+            font-size: 11px;
+            display: block;
+            margin-top: -2px;
+        }
+
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            color: #4a6a8a;
+            cursor: pointer;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d0dcee;
+            transition: 0.2s;
+        }
+
+        .notification-icon:hover {
+            background: #f0f5fe;
+            border-color: #4a9eff;
+        }
+
+        .notification-icon .badge-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #5a7290;
+            margin: 12px 0 18px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e6edf6;
+        }
+
+        .breadcrumb i {
+            margin-right: 6px;
+            color: #7e94b0;
+        }
+        .breadcrumb span {
+            color: #0b2a4a;
+            font-weight: 500;
+        }
+        .breadcrumb .separator {
+            margin: 0 6px;
+            color: #b0c4db;
+        }
+
+        .info-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 22px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 40px;
+            margin: 18px 0 22px 0;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e6edf6;
+        }
+
+        .info-bar .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #1a3452;
+        }
+
+        .info-bar .info-item .label {
+            color: #6a85a5;
+            font-weight: 400;
+        }
+
+        .info-bar .info-item .value {
+            font-weight: 600;
+            background: #f0f5fe;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+        }
+
+        .info-bar .info-item .value.area {
+            background: #0b2a4a;
+            color: white;
+            padding: 4px 16px;
+        }
+
+        .info-bar .info-divider {
+            width: 1px;
+            background: #dde6f2;
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid-status {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card-status {
+            background: white;
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e6edf6;
+            transition: 0.3s;
+        }
+
+        .stat-card-status .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0b2a4a;
+            line-height: 1.2;
+        }
+
+        .stat-card-status .stat-label {
+            font-size: 13px;
+            color: #6a85a5;
+            margin-top: 2px;
+        }
+
+        .stat-card-status .stat-detail {
+            font-size: 12px;
+            color: #5a7290;
+            margin-top: 4px;
+        }
+
+        .stat-card-status .stat-detail .green {
+            color: #0f7b3e;
+        }
+        .stat-card-status .stat-detail .yellow {
+            color: #b87a1a;
+        }
+        .stat-card-status .stat-detail .red {
+            color: #b33a3a;
+        }
+
+        .stat-card-status.danger {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .stat-card-status.danger .stat-number {
+            color: #e74c3c;
+        }
+
+        .stat-card-status.success {
+            border-color: #0f7b3e;
+            background: #f0f9f4;
+        }
+
+        .stat-card-status.success .stat-number {
+            color: #0f7b3e;
+        }
+
+        /* ===== ALARM BANNER ===== */
+        .alarm-banner {
+            background: #e74c3c;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 16px;
+            animation: alarm-pulse 1s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+        }
+
+        .alarm-banner.show {
+            display: flex;
+        }
+
+        .alarm-banner i {
+            font-size: 28px;
+            animation: alarm-rotate 0.8s ease-in-out infinite;
+        }
+
+        .alarm-banner .alarm-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .alarm-banner .alarm-text strong {
+            font-size: 20px;
+        }
+
+        .alarm-banner .alarm-count {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.25);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        @keyframes alarm-pulse {
+            0%,
+            100% {
+                background: #e74c3c;
+                box-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+            }
+            50% {
+                background: #c0392b;
+                box-shadow: 0 0 60px rgba(231, 76, 60, 0.8);
+            }
+        }
+
+        @keyframes alarm-rotate {
+            0%,
+            100% {
+                transform: rotate(-10deg);
+            }
+            50% {
+                transform: rotate(10deg);
+            }
+        }
+
+        /* ===== FILTER ===== */
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 1px solid #e6edf6;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            align-items: center;
+        }
+
+        .filter-section .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-section .filter-group label {
+            font-size: 12px;
+            color: #5a7290;
+            font-weight: 500;
+        }
+
+        .filter-section .filter-group select,
+        .filter-section .filter-group input {
+            padding: 6px 12px;
+            border: 1px solid #d0dcee;
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+            background: #fafcff;
+        }
+
+        .filter-section .filter-group select:focus,
+        .filter-section .filter-group input:focus {
+            border-color: #4a9eff;
+        }
+
+        .btn-reset {
+            background: #eef3f9;
+            color: #1a3452;
+            border: 1px solid #d0dcee;
+            padding: 6px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-reset:hover {
+            background: #dde6f2;
+        }
+
+        /* ===== TABLE ===== */
+        .table-container {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid #e6edf6;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .table-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e6edf6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+
+        .table-header .table-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .table-header .table-actions input {
+            padding: 6px 14px;
+            border: 1px solid #d0dcee;
+            border-radius: 20px;
+            font-size: 12px;
+            outline: none;
+            background: #f8faff;
+        }
+
+        .table-header .table-actions input:focus {
+            border-color: #4a9eff;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: #f5f8fd;
+        }
+
+        th {
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a3452;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid #e0e8f2;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eef3f9;
+            color: #1a3452;
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #f8faff;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-badge.verified {
+            background: #e6f7ed;
+            color: #0f7b3e;
+        }
+
+        .status-badge.verified i {
+            color: #0f7b3e;
+        }
+
+        .status-badge.draft {
+            background: #fef6e6;
+            color: #b87a1a;
+        }
+
+        .status-badge.draft i {
+            color: #b87a1a;
+        }
+
+        .status-badge.pending {
+            background: #f0f2f7;
+            color: #5a7290;
+        }
+
+        .status-badge.pending i {
+            color: #5a7290;
+        }
+
+        .status-badge.rejected {
+            background: #fde8e8;
+            color: #b33a3a;
+        }
+
+        .status-badge.rejected i {
+            color: #b33a3a;
+        }
+
+        .score-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 10px 2px 6px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .score-status .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .score-status.green {
+            background: #e6f7ed;
+            color: #0f7b3e;
+        }
+        .score-status.green .dot {
+            background: #0f7b3e;
+        }
+
+        .score-status.yellow {
+            background: #fef9e6;
+            color: #b87a1a;
+        }
+        .score-status.yellow .dot {
+            background: #f1c40f;
+        }
+
+        .score-status.red {
+            background: #fde8e8;
+            color: #b33a3a;
+        }
+        .score-status.red .dot {
+            background: #e74c3c;
+        }
+
+        .action-link {
+            color: #4a7aa0;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0 4px;
+        }
+
+        .action-link:hover {
+            color: #0b2a4a;
+        }
+
+        /* ===== ANIMASI ALARM UNTUK BARIS BELUM TERCAPAI ===== */
+        @keyframes alarm-row {
+            0%,
+            100% {
+                background-color: #fff5f5;
+                border-left: 4px solid #e74c3c;
+            }
+            25% {
+                background-color: #ffe0e0;
+                border-left: 4px solid #e74c3c;
+            }
+            50% {
+                background-color: #ffcccc;
+                border-left: 4px solid #c0392b;
+            }
+            75% {
+                background-color: #ffe0e0;
+                border-left: 4px solid #e74c3c;
+            }
+        }
+
+        @keyframes alarm-blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            25% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+            75% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes alarm-icon {
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+                color: #e74c3c;
+            }
+            25% {
+                transform: scale(1.2) rotate(-8deg);
+                color: #ff6b6b;
+            }
+            50% {
+                transform: scale(1) rotate(0deg);
+                color: #e74c3c;
+            }
+            75% {
+                transform: scale(1.2) rotate(8deg);
+                color: #ff6b6b;
+            }
+        }
+
+        .row-not-achieved {
+            animation: alarm-row 1.2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .row-not-achieved td:first-child::before {
+            content: "\f0f3";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #e74c3c;
+            animation: alarm-icon 1s ease-in-out infinite;
+        }
+
+        .row-not-achieved td:first-child {
+            position: relative;
+            padding-left: 28px;
+        }
+
+        .row-not-achieved .score-status {
+            animation: alarm-blink 1s ease-in-out infinite;
+        }
+
+        .row-not-achieved .status-badge {
+            animation: alarm-blink 1s ease-in-out infinite;
+        }
+
+        /* Status Column untuk Not Achieved */
+        .status-achieved {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-achieved.achieved {
+            background: #e6f7ed;
+            color: #0f7b3e;
+        }
+
+        .status-achieved.not-achieved {
+            background: #fde8e8;
+            color: #b33a3a;
+            animation: alarm-blink 1s ease-in-out infinite;
+            border: 1px solid #e74c3c;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-weight: 700;
+        }
+
+        .status-achieved.not-achieved i {
+            animation: alarm-icon 1s ease-in-out infinite;
+        }
+
+        .table-footer {
+            padding: 12px 20px;
+            border-top: 1px solid #e6edf6;
+            font-size: 12px;
+            color: #5a7290;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .table-footer .pagination {
+            display: flex;
+            gap: 4px;
+        }
+
+        .table-footer .pagination span {
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .table-footer .pagination span.active {
+            background: #0b2a4a;
+            color: white;
+        }
+
+        .table-footer .pagination span:hover:not(.active) {
+            background: #eef3f9;
+        }
+
+        .badge-count {
+            background: #eef3f9;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #1a3452;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .stats-grid-status {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-section .filter-group {
+                flex-wrap: wrap;
+            }
+            .alarm-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .alarm-banner .alarm-count {
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 12px 0;
+            }
+            .sidebar-brand h2,
+            .menu-item span,
+            .menu-section,
+            .menu-item .badge,
+            .sub-menu {
+                display: none;
+            }
+            .sidebar-brand {
+                padding: 0 12px 12px 12px;
+                justify-content: center;
+            }
+            .sidebar-brand img {
+                height: 30px;
+            }
+            .menu-item {
+                padding: 12px 18px;
+                justify-content: center;
+            }
+            .menu-item i {
+                font-size: 18px;
+                width: auto;
+            }
+            .main-content {
+                padding: 16px;
+            }
+            .stats-grid-status {
+                grid-template-columns: 1fr 1fr;
+            }
+            .info-bar {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .info-bar .info-divider {
+                display: none;
+            }
+            .top-right .user-profile .user-name small {
+                display: none;
+            }
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .table-header .table-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid-status {
+                grid-template-columns: 1fr;
+            }
+            .top-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .top-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .alarm-banner i {
+                font-size: 20px;
+            }
+            .alarm-banner .alarm-text {
+                font-size: 13px;
+            }
+            .alarm-banner .alarm-text strong {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <script>
+        // ===== NAVIGATION FUNCTIONS =====
+        function goToDashboard() {
+            window.location.href = 'index.html';
+        }
+
+        function goToImport() {
+            window.location.href = 'import.html';
+        }
+
+        function goToManual() {
+            window.location.href = 'manual.html';
+        }
+
+        function goToVerifikasi() {
+            window.location.href = 'verifikasi.html';
+        }
+
+        function goToRekapNKO() {
+            window.location.href = 'rekapnko.html';
+        }
+
+        function goToStatusKPI() {
+            window.location.href = 'statuskpi.html';
+        }
+
+        // ===== FILTER FUNCTIONS =====
+        function filterData() {
+            const statusFilter = document.getElementById('filterStatus').value;
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#statusTableBody tr.main-row');
+
+            rows.forEach(row => {
+                const statusText = row.querySelector('.status-cell').textContent.trim();
+                const indikator = row.querySelector('.indikator-cell').textContent.toLowerCase();
+                let show = true;
+
+                if (statusFilter && statusFilter !== 'semua') {
+                    if (statusFilter === 'achieved' && !statusText.includes('Tercapai')) show = false;
+                    if (statusFilter === 'not-achieved' && !statusText.includes('Belum Tercapai')) show = false;
+                }
+
+                if (searchText && !indikator.includes(searchText)) show = false;
+
+                row.style.display = show ? '' : 'none';
+                // Sembunyikan detail row juga
+                const detailRow = document.getElementById('detail-' + row.id.replace('row-', ''));
+                if (detailRow) {
+                    detailRow.style.display = 'none';
+                }
+            });
+        }
+
+        function resetFilter() {
+            document.getElementById('filterStatus').value = 'semua';
+            document.getElementById('searchInput').value = '';
+            filterData();
+        }
+
+        // ===== UPDATE STATS =====
+        function updateStats() {
+            const rows = document.querySelectorAll('#statusTableBody tr.main-row');
+            let total = rows.length;
+            let achieved = 0,
+                notAchieved = 0;
+
+            rows.forEach(row => {
+                const statusText = row.querySelector('.status-cell').textContent.trim();
+                if (statusText.includes('Tercapai')) achieved++;
+                else if (statusText.includes('Belum Tercapai')) notAchieved++;
+            });
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statAchieved').textContent = achieved;
+            document.getElementById('statNotAchieved').textContent = notAchieved;
+
+            const percentage = total > 0 ? Math.round((achieved / total) * 100) : 0;
+            document.getElementById('statPercentage').textContent = percentage + '%';
+
+            // Tampilkan alarm jika ada yang belum tercapai
+            const alarmBanner = document.getElementById('alarmBanner');
+            const alarmCount = document.getElementById('alarmCount');
+            const alarmCountBadge = document.getElementById('alarmCountBadge');
+            if (notAchieved > 0) {
+                alarmBanner.classList.add('show');
+                alarmCount.textContent = notAchieved;
+                alarmCountBadge.textContent = notAchieved;
+            } else {
+                alarmBanner.classList.remove('show');
+            }
+        }
+
+        // ===== TOGGLE DETAIL =====
+        function toggleDetail(id) {
+            const detailRow = document.getElementById('detail-' + id);
+            if (detailRow) {
+                if (detailRow.style.display === 'none' || detailRow.style.display === '') {
+                    detailRow.style.display = 'table-row';
+                } else {
+                    detailRow.style.display = 'none';
+                }
+            }
+        }
+
+        // ===== ON LOAD =====
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR KIRI ===== -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <img src="logo-pln.png" alt="Logo PLN" />
+            <h2>KPI <span>Dashboard</span></h2>
+        </div>
+
+        <div class="menu-section">Menu Utama</div>
+        <div class="menu-item" onclick="goToDashboard()">
+            <i class="fas fa-th-large"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-chart-pie"></i>
+            <span>Info Grafis</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-tasks"></i>
+            <span>Master KPI</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-bullseye"></i>
+            <span>Target KPI</span>
+        </div>
+
+        <div class="menu-section" style="margin-top:8px;">Realisasi &amp; Monitoring</div>
+        <div class="menu-item active">
+            <i class="fas fa-check-circle"></i>
+            <span>Realisasi KPI</span>
+        </div>
+        <div class="sub-menu">
+            <div class="menu-item" onclick="goToManual()">
+                <i class="fas fa-pen"></i>
+                <span>Input Manual</span>
+            </div>
+            <div class="menu-item" onclick="goToImport()">
+                <i class="fas fa-file-import"></i>
+                <span>Import Data</span>
+            </div>
+            <div class="menu-item" onclick="goToVerifikasi()">
+                <i class="fas fa-check-double"></i>
+                <span>Verifikasi KPI</span>
+            </div>
+            <div class="menu-item" onclick="goToRekapNKO()">
+                <i class="fas fa-file-alt"></i>
+                <span>Rekap NKO</span>
+            </div>
+            <div class="menu-item" style="font-weight:500;color:white;border-left-color:#4a9eff;" onclick="goToStatusKPI()">
+                <i class="fas fa-chart-line" style="color:#7cb8ff;"></i>
+                <span>Status KPI</span>
+            </div>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">Data Support</div>
+        <div class="menu-item">
+            <i class="fas fa-database"></i>
+            <span>Data Pendukung</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-link"></i>
+            <span>Integrasi Pendukung</span>
+        </div>
+
+        <div class="menu-divider"></div>
+
+        <div class="menu-section">System</div>
+        <div class="menu-item">
+            <i class="fas fa-users-cog"></i>
+            <span>User Management</span>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-cog"></i>
+            <span>Pengaturan</span>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+        <!-- TOP HEADER -->
+        <div class="top-header">
+            <div class="page-title">
+                <h1>Status KPI</h1>
+                <p>Monitoring status pencapaian KPI per indikator</p>
+            </div>
+            <div class="top-right">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge-dot"></span>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">JD</div>
+                    <div class="user-name">
+                        Jerni Diana
+                        <small>Admin KPI</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb">
+            <i class="fas fa-home"></i>
+            <span>Realisasi KPI</span>
+            <span class="separator">›</span>
+            <span>Status KPI</span>
+        </div>
+
+        <!-- ===== ALARM BANNER ===== -->
+        <div class="alarm-banner" id="alarmBanner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="alarm-text">
+                <strong>PERINGATAN!</strong> Terdapat <span id="alarmCount">0</span> indikator KPI yang <strong>BELUM TERCAPAI</strong>
+            </div>
+            <div class="alarm-count" id="alarmCountBadge">0</div>
+        </div>
+
+        <!-- INFO BAR -->
+        <div class="info-bar">
+            <div class="info-item">
+                <span class="label">Area</span>
+                <span class="value area">Sulawesi, Maluku, Papua, Nusa Tenggara</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-item">
+                <span class="label">Unit</span>
+                <span class="value">UP3 Palu</span>
+            </div>
+            <div class="info-divider"></div>
+            <div class="info-item">
+                <span class="label">Periode</span>
+                <span class="value">Juli 2026</span>
+            </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid-status">
+            <div class="stat-card-status">
+                <div class="stat-number" id="statTotal">0</div>
+                <div class="stat-label">Total Indikator KPI</div>
+            </div>
+            <div class="stat-card-status success">
+                <div class="stat-number" id="statAchieved">0</div>
+                <div class="stat-label"><i class="fas fa-check-circle" style="color:#0f7b3e;"></i> Target Tercapai</div>
+                <div class="stat-detail"><span class="green">●</span> KPI sudah memenuhi target</div>
+            </div>
+            <div class="stat-card-status danger">
+                <div class="stat-number" id="statNotAchieved">0</div>
+                <div class="stat-label"><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Belum Tercapai</div>
+                <div class="stat-detail"><span class="red">●</span> <strong style="color:#b33a3a;">Perlu Tindakan Segera</strong></div>
+            </div>
+            <div class="stat-card-status">
+                <div class="stat-number" id="statPercentage">0%</div>
+                <div class="stat-label">Tingkat Pencapaian</div>
+                <div class="stat-detail">Dari total indikator KPI</div>
+            </div>
+        </div>
+
+        <!-- FILTER SECTION -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label>Status:</label>
+                <select id="filterStatus" onchange="filterData()">
+                    <option value="semua">Semua</option>
+                    <option value="achieved">Target Tercapai</option>
+                    <option value="not-achieved">Belum Tercapai</option>
+                </select>
+            </div>
+            <div class="filter-group" style="flex:1;">
+                <label>Cari:</label>
+                <input type="text" id="searchInput" placeholder="Cari indikator..." oninput="filterData()" style="flex:1;min-width:150px;" />
+            </div>
+            <button class="btn-reset" onclick="resetFilter()">Reset</button>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-list-ul" style="margin-right:8px;color:#4a7aa0;"></i> Daftar Status Pencapaian KPI</h3>
+                <div class="table-actions">
+                    <span class="badge-count"><i class="fas fa-file-alt"></i> 12 Data</span>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:40px;">No</th>
+                            <th>Indikator KPI</th>
+                            <th style="width:70px;">Satuan</th>
+                            <th style="width:55px;">Bobot</th>
+                            <th style="width:75px;">Target</th>
+                            <th style="width:85px;">Realisasi</th>
+                            <th style="width:80px;">Pencapaian</th>
+                            <th style="width:85px;">Nilai KPI</th>
+                            <th style="width:130px;">Status Pencapaian</th>
+                            <th style="width:120px;">Status Verifikasi</th>
+                            <th style="width:60px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statusTableBody">
+                        <!-- ROW 1 - Tercapai -->
+                        <tr id="row-1" class="main-row">
+                            <td>1</td>
+                            <td class="indikator-cell">Penjualan Tenaga Listrik</td>
+                            <td>GWh</td>
+                            <td>14</td>
+                            <td>54,81</td>
+                            <td>50,32</td>
+                            <td>91,82%</td>
+                            <td>12,85</td>
+                            <td class="status-cell">
+                                <span class="status-achieved achieved">
+                                    <i class="fas fa-check-circle"></i> Target Tercapai
+                                </span>
+                            </td>
+                            <td><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(1)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-1" style="display:none;background:#f8faff;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong>Sumber Data:</strong> Sistem SCADA</div>
+                                    <div><strong>Verifikator:</strong> Jerni Diana</div>
+                                    <div><strong>Tanggal Verifikasi:</strong> 26/08/2026</div>
+                                    <div><strong>Catatan:</strong> Data sesuai dengan laporan operasional</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 2 - BELUM TERCAPAI -->
+                        <tr id="row-2" class="main-row row-not-achieved">
+                            <td>2</td>
+                            <td class="indikator-cell">Susut Distribusi Tanpa E-min</td>
+                            <td>%</td>
+                            <td>12</td>
+                            <td>10,63</td>
+                            <td>9,78</td>
+                            <td>92,01%</td>
+                            <td>11,04</td>
+                            <td class="status-cell">
+                                <span class="status-achieved not-achieved">
+                                    <i class="fas fa-exclamation-triangle"></i> BELUM TERCAPAI
+                                </span>
+                            </td>
+                            <td><span class="status-badge pending"><i class="fas fa-clock"></i> Menunggu Verifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(2)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-2" style="display:none;background:#fde8e8;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Masalah:</strong> Target belum tercapai</div>
+                                    <div><strong>Rekomendasi:</strong> Perbaiki sistem distribusi</div>
+                                    <div><strong>Target Perbaikan:</strong> Agustus 2026</div>
+                                    <div><strong>Catatan:</strong> Perlu evaluasi lebih lanjut</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 3 - Tercapai -->
+                        <tr id="row-3" class="main-row">
+                            <td>3</td>
+                            <td class="indikator-cell">SAIDI</td>
+                            <td>Jam</td>
+                            <td>10</td>
+                            <td>10,49</td>
+                            <td>8,21</td>
+                            <td>125,38%</td>
+                            <td>10,00</td>
+                            <td class="status-cell">
+                                <span class="status-achieved achieved">
+                                    <i class="fas fa-check-circle"></i> Target Tercapai
+                                </span>
+                            </td>
+                            <td><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(3)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-3" style="display:none;background:#f8faff;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong>Sumber Data:</strong> Sistem SCADA</div>
+                                    <div><strong>Verifikator:</strong> Jerni Diana</div>
+                                    <div><strong>Tanggal Verifikasi:</strong> 26/08/2026</div>
+                                    <div><strong>Catatan:</strong> Performa baik</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 4 - BELUM TERCAPAI -->
+                        <tr id="row-4" class="main-row row-not-achieved">
+                            <td>4</td>
+                            <td class="indikator-cell">SAIFI</td>
+                            <td>Kali</td>
+                            <td>10</td>
+                            <td>7,19</td>
+                            <td>6,80</td>
+                            <td>105,74%</td>
+                            <td>10,00</td>
+                            <td class="status-cell">
+                                <span class="status-achieved not-achieved">
+                                    <i class="fas fa-exclamation-triangle"></i> BELUM TERCAPAI
+                                </span>
+                            </td>
+                            <td><span class="status-badge draft"><i class="fas fa-pencil-alt"></i> Draft</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(4)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-4" style="display:none;background:#fde8e8;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Masalah:</strong> Target belum tercapai</div>
+                                    <div><strong>Rekomendasi:</strong> Evaluasi sistem pemeliharaan</div>
+                                    <div><strong>Target Perbaikan:</strong> September 2026</div>
+                                    <div><strong>Catatan:</strong> Perlu peningkatan</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 5 - Tercapai -->
+                        <tr id="row-5" class="main-row">
+                            <td>5</td>
+                            <td class="indikator-cell">Jumlah Pelanggan</td>
+                            <td>Pelanggan</td>
+                            <td>10</td>
+                            <td>791.638</td>
+                            <td>781.254</td>
+                            <td>98,69%</td>
+                            <td>9,87</td>
+                            <td class="status-cell">
+                                <span class="status-achieved achieved">
+                                    <i class="fas fa-check-circle"></i> Target Tercapai
+                                </span>
+                            </td>
+                            <td><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(5)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-5" style="display:none;background:#f8faff;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong>Sumber Data:</strong> Database Pelanggan</div>
+                                    <div><strong>Verifikator:</strong> Jerni Diana</div>
+                                    <div><strong>Tanggal Verifikasi:</strong> 26/08/2026</div>
+                                    <div><strong>Catatan:</strong> Data valid</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 6 - BELUM TERCAPAI -->
+                        <tr id="row-6" class="main-row row-not-achieved">
+                            <td>6</td>
+                            <td class="indikator-cell">Rasio Pelanggan/Transformer</td>
+                            <td>%</td>
+                            <td>8</td>
+                            <td>85,00</td>
+                            <td>82,50</td>
+                            <td>97,06%</td>
+                            <td>7,76</td>
+                            <td class="status-cell">
+                                <span class="status-achieved not-achieved">
+                                    <i class="fas fa-exclamation-triangle"></i> BELUM TERCAPAI
+                                </span>
+                            </td>
+                            <td><span class="status-badge pending"><i class="fas fa-clock"></i> Menunggu Verifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(6)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-6" style="display:none;background:#fde8e8;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Masalah:</strong> Rasio pelanggan/transformer rendah</div>
+                                    <div><strong>Rekomendasi:</strong> Tambah kapasitas transformer</div>
+                                    <div><strong>Target Perbaikan:</strong> Oktober 2026</div>
+                                    <div><strong>Catatan:</strong> Perlu penambahan unit</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 7 - Tercapai -->
+                        <tr id="row-7" class="main-row">
+                            <td>7</td>
+                            <td class="indikator-cell">Efisiensi Distribusi</td>
+                            <td>%</td>
+                            <td>8</td>
+                            <td>92,50</td>
+                            <td>91,20</td>
+                            <td>98,59%</td>
+                            <td>7,89</td>
+                            <td class="status-cell">
+                                <span class="status-achieved achieved">
+                                    <i class="fas fa-check-circle"></i> Target Tercapai
+                                </span>
+                            </td>
+                            <td><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(7)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-7" style="display:none;background:#f8faff;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong>Sumber Data:</strong> Sistem Monitoring</div>
+                                    <div><strong>Verifikator:</strong> Jerni Diana</div>
+                                    <div><strong>Tanggal Verifikasi:</strong> 26/08/2026</div>
+                                    <div><strong>Catatan:</strong> Efisiensi meningkat</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 8 - BELUM TERCAPAI -->
+                        <tr id="row-8" class="main-row row-not-achieved">
+                            <td>8</td>
+                            <td class="indikator-cell">Kualitas Pelayanan</td>
+                            <td>%</td>
+                            <td>6</td>
+                            <td>95,00</td>
+                            <td>93,75</td>
+                            <td>98,68%</td>
+                            <td>5,92</td>
+                            <td class="status-cell">
+                                <span class="status-achieved not-achieved">
+                                    <i class="fas fa-exclamation-triangle"></i> BELUM TERCAPAI
+                                </span>
+                            </td>
+                            <td><span class="status-badge pending"><i class="fas fa-clock"></i> Menunggu Verifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(8)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-8" style="display:none;background:#fde8e8;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Masalah:</strong> Kualitas pelayanan di bawah target</div>
+                                    <div><strong>Rekomendasi:</strong> Tingkatkan training petugas</div>
+                                    <div><strong>Target Perbaikan:</strong> Agustus 2026</div>
+                                    <div><strong>Catatan:</strong> Perlu pelatihan</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 9 - Tercapai -->
+                        <tr id="row-9" class="main-row">
+                            <td>9</td>
+                            <td class="indikator-cell">Penyerapan Anggaran</td>
+                            <td>%</td>
+                            <td>6</td>
+                            <td>90,00</td>
+                            <td>87,50</td>
+                            <td>97,22%</td>
+                            <td>5,83</td>
+                            <td class="status-cell">
+                                <span class="status-achieved achieved">
+                                    <i class="fas fa-check-circle"></i> Target Tercapai
+                                </span>
+                            </td>
+                            <td><span class="status-badge verified"><i class="fas fa-check-circle"></i> Terverifikasi</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(9)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-9" style="display:none;background:#f8faff;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong>Sumber Data:</strong> Sistem Keuangan</div>
+                                    <div><strong>Verifikator:</strong> Jerni Diana</div>
+                                    <div><strong>Tanggal Verifikasi:</strong> 26/08/2026</div>
+                                    <div><strong>Catatan:</strong> Penyerapan sesuai target</div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- ROW 10 - BELUM TERCAPAI -->
+                        <tr id="row-10" class="main-row row-not-achieved">
+                            <td>10</td>
+                            <td class="indikator-cell">Kepuasan Pelanggan</td>
+                            <td>%</td>
+                            <td>4</td>
+                            <td>88,00</td>
+                            <td>85,20</td>
+                            <td>96,82%</td>
+                            <td>3,87</td>
+                            <td class="status-cell">
+                                <span class="status-achieved not-achieved">
+                                    <i class="fas fa-exclamation-triangle"></i> BELUM TERCAPAI
+                                </span>
+                            </td>
+                            <td><span class="status-badge rejected"><i class="fas fa-times-circle"></i> Ditolak</span></td>
+                            <td>
+                                <span class="action-link" title="Detail" onclick="toggleDetail(10)">
+                                    <i class="fas fa-chevron-down"></i>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr id="detail-10" style="display:none;background:#fde8e8;">
+                            <td colspan="11" style="padding:12px 20px;">
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px;">
+                                    <div><strong><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Masalah:</strong> Kepuasan pelanggan menurun</div>
+                                    <div><strong>Rekomendasi:</strong> Survei ulang dan perbaiki layanan</div>
+                                    <div><strong>Target Perbaikan:</strong> September 2026</div>
+                                    <div><strong>Catatan:</strong> Data survei perlu diperbarui</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-footer">
+                <span>Menampilkan 1 - 10 dari 12 data</span>
+                <div class="pagination">
+                    <span><i class="fas fa-chevron-left"></i></span>
+                    <span class="active">1</span>
+                    <span>2</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
