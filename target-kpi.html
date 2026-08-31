@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Target KPI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* ===== RESET & VARIABLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        :root {
+            --primary: #0b2a4a;
+            --primary-light: #143a5a;
+            --accent: #4a9eff;
+            --green: #0f7b3e;
+            --green-bg: #e6f7ed;
+            --yellow: #b87a1a;
+            --yellow-bg: #fef9e6;
+            --red: #b33a3a;
+            --red-bg: #fde8e8;
+            --grey: #5a7290;
+            --grey-bg: #f0f2f7;
+            --border: #e6edf6;
+            --shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            --radius: 14px;
+        }
+        body {
+            background: #f0f2f7;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 240px;
+            background: var(--primary);
+            color: #e0e9f5;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #2a5a7a;
+            border-radius: 10px;
+        }
+        .sidebar-brand {
+            padding: 0 20px 18px 20px;
+            border-bottom: 1px solid #1a3d5e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar-brand img {
+            height: 40px;
+            width: auto;
+        }
+        .sidebar-brand h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+        .sidebar-brand h2 span {
+            font-weight: 300;
+            color: #8ab3d6;
+        }
+        .menu-section {
+            padding: 16px 20px 6px 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #6e92b5;
+            font-weight: 600;
+        }
+        .menu-item {
+            padding: 10px 20px 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13.5px;
+            color: #b6cde0;
+            cursor: pointer;
+            transition: 0.15s;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+        }
+        .menu-item:hover {
+            background: var(--primary-light);
+            color: #fff;
+        }
+        .menu-item.active {
+            background: var(--primary-light);
+            color: #fff;
+            border-left-color: var(--accent);
+        }
+        .menu-item i {
+            width: 20px;
+            font-size: 15px;
+            color: #6a92b8;
+        }
+        .menu-item.active i {
+            color: #7cb8ff;
+        }
+        .menu-divider {
+            height: 1px;
+            background: #1a3d5e;
+            margin: 8px 20px;
+        }
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            padding: 24px 32px 40px 32px;
+            background: #f0f2f7;
+            overflow-x: auto;
+        }
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .page-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .page-title p {
+            color: var(--grey);
+            font-size: 14px;
+            margin-top: 2px;
+        }
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fff;
+            padding: 4px 16px 4px 12px;
+            border-radius: 30px;
+            border: 1px solid #d0dcee;
+        }
+        .user-profile .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .user-profile .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        .user-profile .user-name small {
+            font-weight: 400;
+            color: #6a85a5;
+            font-size: 11px;
+            display: block;
+            margin-top: -2px;
+        }
+        .notification-icon {
+            position: relative;
+            font-size: 20px;
+            color: #4a6a8a;
+            cursor: pointer;
+            background: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d0dcee;
+            transition: 0.2s;
+        }
+        .notification-icon:hover {
+            background: #f0f5fe;
+            border-color: var(--accent);
+        }
+        .notification-icon .badge-dot {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+        }
+        .breadcrumb {
+            font-size: 13px;
+            color: #5a7290;
+            margin: 12px 0 18px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .breadcrumb i {
+            margin-right: 6px;
+            color: #7e94b0;
+        }
+        .breadcrumb span {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .table-container {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+        .table-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .table-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .table-header h3 i {
+            color: #4a7aa0;
+            margin-right: 8px;
+        }
+        .table-header .table-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .table-header .table-actions input {
+            padding: 6px 14px;
+            border: 1px solid #d0dcee;
+            border-radius: 20px;
+            font-size: 12px;
+            outline: none;
+            background: #f8faff;
+            transition: 0.2s;
+        }
+        .table-header .table-actions input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+        }
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        thead {
+            background: #f5f8fd;
+        }
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a3452;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid #e0e8f2;
+            white-space: nowrap;
+        }
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eef3f9;
+            color: #1a3452;
+            vertical-align: middle;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background: #f8faff;
+        }
+        .target-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .target-status.on-track {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .target-status.at-risk {
+            background: var(--yellow-bg);
+            color: var(--yellow);
+        }
+        .target-status.behind {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+        .progress-mini {
+            height: 6px;
+            background: #eef3f9;
+            border-radius: 6px;
+            overflow: hidden;
+            width: 100px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 6px;
+        }
+        .progress-mini .fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.8s ease;
+        }
+        .progress-mini .fill.green {
+            background: var(--green);
+        }
+        .progress-mini .fill.yellow {
+            background: #f1c40f;
+        }
+        .progress-mini .fill.red {
+            background: #e74c3c;
+        }
+        .table-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--grey);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .table-footer .pagination {
+            display: flex;
+            gap: 4px;
+        }
+        .table-footer .pagination span {
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .table-footer .pagination span.active {
+            background: var(--primary);
+            color: #fff;
+        }
+        .table-footer .pagination span:hover:not(.active) {
+            background: #eef3f9;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 12px 0;
+            }
+            .sidebar-brand h2,
+            .menu-item span,
+            .menu-section {
+                display: none;
+            }
+            .sidebar-brand {
+                padding: 0 12px 12px 12px;
+                justify-content: center;
+            }
+            .sidebar-brand img {
+                height: 30px;
+            }
+            .menu-item {
+                padding: 12px 18px;
+                justify-content: center;
+            }
+            .menu-item i {
+                font-size: 18px;
+                width: auto;
+            }
+            .main-content {
+                padding: 16px;
+            }
+            .top-right .user-profile .user-name small {
+                display: none;
+            }
+            .top-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .top-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .table-header .table-actions {
+                flex-wrap: wrap;
+            }
+        }
+        @media (max-width: 480px) {
+            .progress-mini {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand"><img src="logo-pln.png" alt="Logo PLN" /><h2>KPI <span>Dashboard</span></h2></div>
+        <div class="menu-section">Menu Utama</div>
+        <div class="menu-item" onclick="location.href='dashboard.html'"><i class="fas fa-th-large"></i><span>Dashboard</span></div>
+        <div class="menu-item" onclick="location.href='info-grafis.html'"><i class="fas fa-chart-pie"></i><span>Info Grafis</span></div>
+        <div class="menu-item" onclick="location.href='master-kpi.html'"><i class="fas fa-tasks"></i><span>Master KPI</span></div>
+        <div class="menu-item active" onclick="location.href='target-kpi.html'"><i class="fas fa-bullseye"></i><span>Target KPI</span></div>
+        <div class="menu-section" style="margin-top:8px;">Realisasi &amp; Monitoring</div>
+        <div class="menu-item" onclick="location.href='realisasi.html'"><i class="fas fa-check-circle"></i><span>Realisasi KPI</span></div>
+        <div class="menu-item" onclick="location.href='verifikasi.html'"><i class="fas fa-check-double"></i><span>Verifikasi KPI</span></div>
+        <div class="menu-item" onclick="location.href='rekapnko.html'"><i class="fas fa-file-alt"></i><span>Rekap NKO</span></div>
+        <div class="menu-item" onclick="location.href='statuskpi.html'"><i class="fas fa-chart-line"></i><span>Status KPI</span></div>
+        <div class="menu-divider"></div>
+        <div class="menu-section">Data Support</div>
+        <div class="menu-item"><i class="fas fa-database"></i><span>Data Pendukung</span></div>
+        <div class="menu-item"><i class="fas fa-link"></i><span>Integrasi Pendukung</span></div>
+        <div class="menu-divider"></div>
+        <div class="menu-section">System</div>
+        <div class="menu-item"><i class="fas fa-users-cog"></i><span>User Management</span></div>
+        <div class="menu-item"><i class="fas fa-cog"></i><span>Pengaturan</span></div>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-header">
+            <div class="page-title"><h1>Target KPI</h1><p>Target dan realisasi per indikator KPI untuk periode berjalan</p></div>
+            <div class="top-right">
+                <div class="notification-icon"><i class="fas fa-bell"></i><span class="badge-dot"></span></div>
+                <div class="user-profile"><div class="avatar">JD</div><div class="user-name">Jerni Diana <small>Admin KPI</small></div></div>
+            </div>
+        </div>
+
+        <div class="breadcrumb"><i class="fas fa-home"></i><span>Target KPI</span></div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-bullseye"></i> Target & Realisasi KPI</h3>
+                <div class="table-actions">
+                    <span style="font-size:12px;color:#6a85a5;margin-right:8px;">Periode: Juli 2026</span>
+                    <input type="text" placeholder="Cari indikator..." />
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th style="width:40px;">No</th><th>Indikator</th><th style="width:90px;">Satuan</th><th style="width:90px;">Target</th><th style="width:90px;">Realisasi</th><th style="width:90px;">Pencapaian</th><th style="width:140px;">Status Target</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Penjualan Tenaga Listrik</td><td>GWh</td><td>54,81</td><td>50,32</td><td>91,82%</td><td><span class="target-status at-risk"><i class="fas fa-exclamation-triangle"></i> Mendekati</span><div class="progress-mini"><div class="fill yellow" style="width:91.82%;"></div></div></td></tr>
+                        <tr><td>2</td><td>Susut Distribusi Tanpa E-min (sesuai kewenangan)</td><td>%</td><td>10,63</td><td>9,78</td><td>92,01%</td><td><span class="target-status at-risk"><i class="fas fa-exclamation-triangle"></i> Mendekati</span><div class="progress-mini"><div class="fill yellow" style="width:92.01%;"></div></div></td></tr>
+                        <tr><td>3</td><td>SAIDI</td><td>Jam</td><td>10,49</td><td>8,21</td><td>125,38%</td><td><span class="target-status on-track"><i class="fas fa-check-circle"></i> Tercapai</span><div class="progress-mini"><div class="fill green" style="width:100%;"></div></div></td></tr>
+                        <tr><td>4</td><td>SAIFI</td><td>Kali</td><td>7,19</td><td>6,80</td><td>105,74%</td><td><span class="target-status on-track"><i class="fas fa-check-circle"></i> Tercapai</span><div class="progress-mini"><div class="fill green" style="width:100%;"></div></div></td></tr>
+                        <tr><td>5</td><td>Jumlah Pelanggan</td><td>Pelanggan</td><td>791.638</td><td>781.254</td><td>98,69%</td><td><span class="target-status at-risk"><i class="fas fa-exclamation-triangle"></i> Mendekati</span><div class="progress-mini"><div class="fill yellow" style="width:98.69%;"></div></div></td></tr>
+                        <tr><td>6</td><td>Rasio Pelanggan/Transformer</td><td>%</td><td>85,00</td><td>82,50</td><td>97,06%</td><td><span class="target-status behind"><i class="fas fa-times-circle"></i> Perlu Tindakan</span><div class="progress-mini"><div class="fill red" style="width:97.06%;"></div></div></td></tr>
+                        <tr><td>7</td><td>Efisiensi Distribusi</td><td>%</td><td>92,50</td><td>91,20</td><td>98,59%</td><td><span class="target-status at-risk"><i class="fas fa-exclamation-triangle"></i> Mendekati</span><div class="progress-mini"><div class="fill yellow" style="width:98.59%;"></div></div></td></tr>
+                        <tr><td>8</td><td>Kualitas Pelayanan</td><td>%</td><td>95,00</td><td>93,75</td><td>98,68%</td><td><span class="target-status behind"><i class="fas fa-times-circle"></i> Perlu Tindakan</span><div class="progress-mini"><div class="fill red" style="width:98.68%;"></div></div></td></tr>
+                        <tr><td>9</td><td>Penyerapan Anggaran</td><td>%</td><td>90,00</td><td>87,50</td><td>97,22%</td><td><span class="target-status behind"><i class="fas fa-times-circle"></i> Perlu Tindakan</span><div class="progress-mini"><div class="fill red" style="width:97.22%;"></div></div></td></tr>
+                        <tr><td>10</td><td>Kepuasan Pelanggan</td><td>%</td><td>88,00</td><td>85,20</td><td>96,82%</td><td><span class="target-status behind"><i class="fas fa-times-circle"></i> Perlu Tindakan</span><div class="progress-mini"><div class="fill red" style="width:96.82%;"></div></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer">
+                <span>Menampilkan 1 - 10 dari 10 data</span>
+                <div class="pagination">
+                    <span><i class="fas fa-chevron-left"></i></span>
+                    <span class="active">1</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
